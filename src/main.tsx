@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import './index.css'
-import {Web3Provider} from "@/Web3Provider.tsx";
+import { Router } from './Router.tsx'
+import { ThemeProvider } from './components/theme-provider.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Web3Provider>
-        <App />
-    </Web3Provider>
+    <ThemeProvider defaultTheme="dark" storageKey="nova-theme">
+      <Router />
+    </ThemeProvider>
   </React.StrictMode>,
 )

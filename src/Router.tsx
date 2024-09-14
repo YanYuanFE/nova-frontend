@@ -1,7 +1,8 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "@/pages/404";
 import App from "@/App.tsx";
-import Home from "@/pages/home";
+import Dashboard from "@/pages/dashboard";
+import SignIn from "./pages/signin";
 
 const routerConfig = [
     {
@@ -10,9 +11,13 @@ const routerConfig = [
         children: [
             {
                 path: '/',
-                element: <Home />
+                element: <Dashboard />
             }
         ]
+    },
+    {
+        path: '/signin',
+        element: <SignIn />
     },
     {
         path: '*',
@@ -24,6 +29,6 @@ const router = createBrowserRouter(routerConfig);
 
 export const Router = () => {
     return (
-        <RouterProvider router={router}/>
+        <RouterProvider router={router} />
     )
 }
