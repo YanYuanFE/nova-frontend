@@ -13,10 +13,14 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-    async function onSubmit(event: React.SyntheticEvent) {
+    async function handleSignByGithub(event: React.SyntheticEvent) {
         event.preventDefault()
-        setIsLoading(true)
+        setIsLoading(true);
+        // 在当前页面打开 /api/auth/github 窗口
+        window.location.href = '/api/auth/github';
 
+    //     window.open('/api/auth/github','github',
+    //   'width=500,height=500');
         setTimeout(() => {
             setIsLoading(false)
         }, 3000)
@@ -24,7 +28,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
     return (
         <div className={cn("grid gap-6", className)} {...props}>
-            <Button variant="outline" type="button" disabled={isLoading}>
+            <Button variant="outline" type="button" disabled={isLoading} onClick={handleSignByGithub}>
                 {isLoading ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 ) : (

@@ -3,6 +3,7 @@ import NotFound from "@/pages/404";
 import App from "@/App.tsx";
 import Dashboard from "@/pages/dashboard";
 import SignIn from "./pages/signin";
+import Project from "./pages/Project";
 
 const routerConfig = [
     {
@@ -12,6 +13,10 @@ const routerConfig = [
             {
                 path: '/',
                 element: <Dashboard />
+            },
+            {
+                path: '/project/:id',
+                element: <Project />
             }
         ]
     },
