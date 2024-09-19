@@ -4,17 +4,13 @@ import {
   FilePlus,
   FolderPlus,
   Loader2,
-  MonitorPlay,
-  Search,
-  Sparkles,
 } from "lucide-react";
 import SidebarFile from "./File";
 import SidebarFolder from "./Folder";
-import { Sandbox, TFile, TFolder, TTab } from "@/types";
+import { IProject, TFile, TFolder, TTab } from "@/types";
 import { useEffect, useRef, useState } from "react";
 import New from "./New";
 import { Socket } from "socket.io-client";
-import { Switch } from "@/components/ui/switch";
 
 import {
   dropTargetForElements,
@@ -22,7 +18,7 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 export default function Sidebar({
-  sandboxData,
+  project,
   files,
   selectFile,
   handleRename,
@@ -31,11 +27,9 @@ export default function Sidebar({
   socket,
   setFiles,
   addNew,
-  ai,
-  setAi,
   deletingFolderId,
 }: {
-  sandboxData: Sandbox;
+  project: IProject;
   files: (TFile | TFolder)[];
   selectFile: (tab: TTab) => void;
   handleRename: (
@@ -49,8 +43,6 @@ export default function Sidebar({
   socket: Socket;
   setFiles: (files: (TFile | TFolder)[]) => void;
   addNew: (name: string, type: "file" | "folder") => void;
-  ai: boolean;
-  setAi: React.Dispatch<React.SetStateAction<boolean>>;
   deletingFolderId: string;
 }) {
   const ref = useRef(null); // drop target
@@ -66,7 +58,7 @@ export default function Sidebar({
     if (el) {
       return dropTargetForElements({
         element: el,
-        getData: () => ({ id: `projects/${sandboxData.id}` }),
+        getData: () => ({ id: `projects/${project.id}` }),
         canDrop: ({ source }) => {
           const file = files.find((child) => child.id === source.data.id);
           return !file;

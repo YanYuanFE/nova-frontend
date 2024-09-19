@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, X } from "lucide-react";
-import { MouseEvent, MouseEventHandler, useEffect } from "react";
+import { MouseEventHandler } from "react";
 import { Button } from "./ui/button";
 
 export default function Tab({

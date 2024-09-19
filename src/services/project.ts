@@ -1,3 +1,4 @@
+import { IProject } from '@/types';
 import { apiClient } from '@/utils/api-client';
 
 // POST /api/project
@@ -12,7 +13,7 @@ export async function getProjects() {
 
 // GET /api/project/:id
 export async function getProject(id: string) {
-  return await apiClient.get(`/project/${id}`);
+  return await apiClient.get<IProject>(`/project?projectId=${id}`);
 }
 
 // PUT /api/project/:id

@@ -5,23 +5,23 @@ export type User = {
   name: string;
   email: string;
   generations: number;
-  sandbox: Sandbox[];
-  usersToSandboxes: UsersToSandboxes[];
+  project: IProject[];
+  usersToProjectes: UsersToProjectes[];
 };
 
-export type Sandbox = {
+export type IProject = {
   id: string;
   name: string;
   type: 'react' | 'node';
   visibility: 'public' | 'private';
   createdAt: Date;
   userId: string;
-  usersToSandboxes: UsersToSandboxes[];
+  usersToProjectes: UsersToProjectes[];
 };
 
-export type UsersToSandboxes = {
+export type UsersToProjectes = {
   userId: string;
-  sandboxId: string;
+  projectId: string;
   sharedOn: Date;
 };
 
