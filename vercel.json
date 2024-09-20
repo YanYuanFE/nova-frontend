@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/:match*",
+        "destination": "http://nova-backend-14d11c-ab8194-103-149-27-64.traefik.me/api/:match*"
+      },
+      {
+        "source": "/:path*",
+        "destination": "/index.html"
+      }
+    ]
+  }
