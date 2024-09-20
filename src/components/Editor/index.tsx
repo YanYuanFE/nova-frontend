@@ -2,15 +2,15 @@ import { useAuth } from '@/components/AuthProvider';
 import Sidebar from '@/components/Editor/Navbar';
 import { ENVS } from '@/constants/config';
 import { IProject, TFile, TFolder, TTab } from '@/types';
-import { debounce, processFileType } from '@/utils';
+import { debounce, processFileType, validateName } from '@/utils';
 import { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 import monaco from 'monaco-editor';
-import Editor, { BeforeMount, OnMount } from '@monaco-editor/react';
-import { Loader2, FileJson, Hammer } from 'lucide-react';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { BeforeMount, OnMount } from '@monaco-editor/react';
+import { FileJson, Hammer } from 'lucide-react';
+import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import Tab from '@/components/Tab';
 import { CairoEditor } from '@/components/Editor/CairoEditor';
@@ -32,9 +32,9 @@ export function EditorCore({ project }: { project: IProject }) {
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const monacoRef = useRef<typeof monaco | null>(null);
-  const generateRef = useRef<HTMLDivElement>(null);
-  const generateWidgetRef = useRef<HTMLDivElement>(null);
-  const previewPanelRef = useRef<ImperativePanelHandle>(null);
+  // const generateRef = useRef<HTMLDivElement>(null);
+  // const generateWidgetRef = useRef<HTMLDivElement>(null);
+  // const previewPanelRef = useRef<ImperativePanelHandle>(null);
   const editorPanelRef = useRef<ImperativePanelHandle>(null);
   const [compileLoading, setCompileLoading] = useState(false);
   const [logs, setLogs] = useState<ILog[]>([]);
@@ -83,8 +83,35 @@ export function EditorCore({ project }: { project: IProject }) {
       socketRef.current?.off('loaded', onLoadedEvent);
       socketRef.current?.off('error', onError);
     };
-    // }, []);
   }, []);
+
+  const debouncedSaveData = useCallback(
+    debounce((value: string | undefined, activeFileId: string | undefined) => {
+      setTabs((prev) =>
+        prev.map((tab) =>
+          tab.id === activeFileId ? { ...tab, saved: true } : tab
+        )
+      );
+      console.log(`Saving file...${activeFileId}`);
+      console.log(`Saving file...${value}`);
+      socketRef.current?.emit("saveFile", activeFileId, value);
+    }, 1000),
+    [socketRef]
+  );
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "s" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        debouncedSaveData(editorRef?.getValue(), activeFileId);
+      }
+    };
+    document.addEventListener("keydown", down);
+
+    return () => {
+      document.removeEventListener("keydown", down);
+    };
+  }, [activeFileId, tabs, debouncedSaveData]);
 
   const handleEditorWillMount: BeforeMount = (monaco) => {
     monaco.editor.addKeybindingRules([
@@ -265,24 +292,69 @@ export function EditorCore({ project }: { project: IProject }) {
     }
   };
 
-  const handleRename = (id: string, name: string) => {
-    // const file = files.find((file) => file.id === id)
-    // if (file) {
-    //   setFiles(files.map((file) => file.id === id ? { ...file, name } : file))
-    // }
-  };
+  const handleRename = (
+    id: string,
+    newName: string,
+    oldName: string,
+    type: "file" | "folder"
+  ) => {
+    const valid = validateName(newName, oldName, type)
+    if (!valid.status) {
+      if (valid.message) toast.error("Invalid file name.")
+      return false
+    }
 
-  const handleDeleteFile = (id: string) => {
-    // setFiles(files.filter((file) => file.id !== id))
-  };
+    socketRef.current?.emit("renameFile", id, newName)
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === id ? { ...tab, name: newName } : tab))
+    )
 
-  const handleDeleteFolder = (id: string) => {
-    // setFiles(files.filter((file) => file.id !== id))
-  };
+    return true
+  }
 
-  const addNew = (name: string, type: 'file' | 'folder') => {
-    // setFiles([...files, { id: uuidv4(), name, type, children: [] }])
-  };
+  const handleDeleteFile = (file: TFile) => {
+    socketRef.current?.emit("deleteFile", file.id, (response: (TFolder | TFile)[]) => {
+      setFiles(response)
+    })
+    closeTab(file.id)
+  }
+
+  const handleDeleteFolder = (folder: TFolder) => {
+    setDeletingFolderId(folder.id)
+    console.log("deleting folder", folder.id)
+
+    socketRef.current?.emit("getFolder", folder.id, (response: string[]) =>
+      closeTabs(response)
+    )
+
+    socketRef.current?.emit("deleteFolder", folder.id, (response: (TFolder | TFile)[]) => {
+      setFiles(response)
+      setDeletingFolderId("")
+    })
+  }
+
+  const addNew =(
+    name: string,
+    type: "file" | "folder",
+  ) => {
+    if (type === "file") {
+      setFiles((prev) => [
+        ...prev,
+        { id: `projects/${project.id}/${name}`, name, type: "file" },
+      ])
+    } else {
+      console.log("adding folder")
+      setFiles((prev) => [
+        ...prev,
+        {
+          id: `projects/${project.id}/${name}`,
+          name,
+          type: "folder",
+          children: [],
+        },
+      ])
+    }
+  }
 
   console.log(editorLanguage, 'editorLanguage');
 
@@ -295,9 +367,9 @@ export function EditorCore({ project }: { project: IProject }) {
         handleRename={handleRename}
         handleDeleteFile={handleDeleteFile}
         handleDeleteFolder={handleDeleteFolder}
-        socket={socketRef.current}
+        socket={socketRef.current!}
         setFiles={setFiles}
-        addNew={(name, type) => addNew(name, type, setFiles, sandboxData)}
+        addNew={(name, type) => addNew(name, type)}
         deletingFolderId={deletingFolderId}
       />
       <ResizablePanelGroup direction="horizontal">
@@ -315,7 +387,7 @@ export function EditorCore({ project }: { project: IProject }) {
                 key={tab.id}
                 saved={tab.saved}
                 selected={activeFileId === tab.id}
-                onClick={(e) => {
+                onClick={() => {
                   selectFile(tab);
                 }}
                 onClose={() => closeTab(tab.id)}
@@ -337,8 +409,8 @@ export function EditorCore({ project }: { project: IProject }) {
               <CairoEditor
                 height="100%"
                 language={editorLanguage}
-                // beforeMount={handleEditorWillMount}
-                // onMount={handleEditorMount}
+                beforeMount={handleEditorWillMount}
+                onMount={handleEditorMount}
                 onChange={(value) => {
                   if (value === activeFileContent) {
                     setTabs((prev) => prev.map((tab) => (tab.id === activeFileId ? { ...tab, saved: true } : tab)));

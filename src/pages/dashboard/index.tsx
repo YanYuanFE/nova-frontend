@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
-import { getUser } from '@/services/user';
 import { NewProjectModal } from './components/CreateProject';
 import { getProjects } from '@/services/project';
 import { ProjectCard } from './components/ProjectCard';

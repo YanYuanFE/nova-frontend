@@ -5,7 +5,6 @@ import { Router } from './Router.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from './components/ui/toaster.tsx'
-import { AuthProvider } from './components/AuthProvider.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {

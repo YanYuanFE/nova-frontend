@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 export enum LogType {
     Error,

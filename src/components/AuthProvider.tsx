@@ -1,6 +1,6 @@
 import { getUser } from '@/services/user';
 import { useQuery } from '@tanstack/react-query';
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 
 interface AuthContextType {
   user: any;

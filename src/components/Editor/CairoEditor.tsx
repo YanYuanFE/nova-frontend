@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
-import { Editor, loader } from "@monaco-editor/react";
+import { Editor, EditorProps, loader } from "@monaco-editor/react";
 import { cairoLanguageDef, cairoSnippets, cairoTheme } from './config';
 
 
 
-interface CairoEditorProps {
+interface CairoEditorProps extends EditorProps {
     value: string;
     onChange: (value: string | undefined) => void;
     height?: string;
     language?: string;
 }
 
-export const CairoEditor: React.FC<CairoEditorProps> = ({ value, onChange, height = "40vh", language }) => {
+export const CairoEditor: React.FC<CairoEditorProps> = ({ value, onChange, height = "40vh", language, ...rest }) => {
     useEffect(() => {
         loader.init().then(monaco => {
             monaco.languages.register({ id: 'cairo' });
@@ -64,6 +64,7 @@ export const CairoEditor: React.FC<CairoEditorProps> = ({ value, onChange, heigh
                 readOnly: false,
                 automaticLayout: true,
             }}
+            {...rest}
         />
     );
 };
