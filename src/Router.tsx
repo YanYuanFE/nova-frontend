@@ -4,6 +4,7 @@ import App from "@/App.tsx";
 import Dashboard from "@/pages/dashboard";
 import SignIn from "./pages/signin";
 import Project from "./pages/Project";
+import Auth from "./pages/auth";
 
 const routerConfig = [
     {
@@ -23,6 +24,10 @@ const routerConfig = [
     {
         path: '/signin',
         element: <SignIn />
+    },
+    {
+        path: '/auth-callback',
+        element: <Auth />
     },
     {
         path: '*',
