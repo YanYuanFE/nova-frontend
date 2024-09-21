@@ -26,9 +26,9 @@ export default function Tab({
       onClick={onClick ?? undefined}
       size="sm"
       variant={"secondary"}
-      className={`font-normal select-none ${
+      className={`font-normal select-none h-7 ${
         selected
-          ? "bg-neutral-700 hover:bg-neutral-600 text-foreground"
+          ? "bg-secondary hover:bg-secondary text-foreground"
           : "text-muted-foreground"
       }`}
     >

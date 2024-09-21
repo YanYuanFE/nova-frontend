@@ -87,29 +87,25 @@ export function EditorCore({ project }: { project: IProject }) {
 
   const debouncedSaveData = useCallback(
     debounce((value: string | undefined, activeFileId: string | undefined) => {
-      setTabs((prev) =>
-        prev.map((tab) =>
-          tab.id === activeFileId ? { ...tab, saved: true } : tab
-        )
-      );
+      setTabs((prev) => prev.map((tab) => (tab.id === activeFileId ? { ...tab, saved: true } : tab)));
       console.log(`Saving file...${activeFileId}`);
       console.log(`Saving file...${value}`);
-      socketRef.current?.emit("saveFile", activeFileId, value);
+      socketRef.current?.emit('saveFile', activeFileId, value);
     }, 1000),
     [socketRef]
   );
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "s" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         debouncedSaveData(editorRef?.getValue(), activeFileId);
       }
     };
-    document.addEventListener("keydown", down);
+    document.addEventListener('keydown', down);
 
     return () => {
-      document.removeEventListener("keydown", down);
+      document.removeEventListener('keydown', down);
     };
   }, [activeFileId, tabs, debouncedSaveData]);
 
@@ -196,11 +192,16 @@ export function EditorCore({ project }: { project: IProject }) {
     setCompileLoading(true);
     socketRef.current?.emit('compileProject', (response: any) => {
       console.log(response, 'response');
-      setLogs(prev => [...prev, {
-        type: LogType.Info,
-        message: response.stdout,
-      }]);
-      setFiles(response.files);
+      setLogs((prev) => [
+        {
+          type: response.success ? LogType.Info : LogType.Error,
+          message: response.result
+        },
+        ...prev
+      ]);
+      if (response.files) {
+        setFiles(response.files);
+      }
       setCompileLoading(false);
     });
   };
@@ -220,10 +221,13 @@ export function EditorCore({ project }: { project: IProject }) {
         return [...prev, tab];
       });
 
+      console.log(tab.id, 'tab.id');
       if (fileCache.current.has(tab.id)) {
+        console.log('has cache', fileCache.current.get(tab.id));
         setActiveFileContent(fileCache.current.get(tab.id));
       } else {
         debouncedGetFile(tab.id, (response: SetStateAction<string>) => {
+          console.log('no cache', response);
           fileCache.current.set(tab.id, response);
           setActiveFileContent(response);
         });
@@ -292,74 +296,59 @@ export function EditorCore({ project }: { project: IProject }) {
     }
   };
 
-  const handleRename = (
-    id: string,
-    newName: string,
-    oldName: string,
-    type: "file" | "folder"
-  ) => {
-    const valid = validateName(newName, oldName, type)
+  const handleRename = (id: string, newName: string, oldName: string, type: 'file' | 'folder') => {
+    const valid = validateName(newName, oldName, type);
     if (!valid.status) {
-      if (valid.message) toast.error("Invalid file name.")
-      return false
+      if (valid.message) toast.error('Invalid file name.');
+      return false;
     }
 
-    socketRef.current?.emit("renameFile", id, newName)
-    setTabs((prev) =>
-      prev.map((tab) => (tab.id === id ? { ...tab, name: newName } : tab))
-    )
+    socketRef.current?.emit('renameFile', id, newName);
+    setTabs((prev) => prev.map((tab) => (tab.id === id ? { ...tab, name: newName } : tab)));
 
-    return true
-  }
+    return true;
+  };
 
   const handleDeleteFile = (file: TFile) => {
-    socketRef.current?.emit("deleteFile", file.id, (response: (TFolder | TFile)[]) => {
-      setFiles(response)
-    })
-    closeTab(file.id)
-  }
+    socketRef.current?.emit('deleteFile', file.id, (response: (TFolder | TFile)[]) => {
+      setFiles(response);
+    });
+    closeTab(file.id);
+  };
 
   const handleDeleteFolder = (folder: TFolder) => {
-    setDeletingFolderId(folder.id)
-    console.log("deleting folder", folder.id)
+    setDeletingFolderId(folder.id);
+    console.log('deleting folder', folder.id);
 
-    socketRef.current?.emit("getFolder", folder.id, (response: string[]) =>
-      closeTabs(response)
-    )
+    socketRef.current?.emit('getFolder', folder.id, (response: string[]) => closeTabs(response));
 
-    socketRef.current?.emit("deleteFolder", folder.id, (response: (TFolder | TFile)[]) => {
-      setFiles(response)
-      setDeletingFolderId("")
-    })
-  }
+    socketRef.current?.emit('deleteFolder', folder.id, (response: (TFolder | TFile)[]) => {
+      setFiles(response);
+      setDeletingFolderId('');
+    });
+  };
 
-  const addNew =(
-    name: string,
-    type: "file" | "folder",
-  ) => {
-    if (type === "file") {
-      setFiles((prev) => [
-        ...prev,
-        { id: `projects/${project.id}/${name}`, name, type: "file" },
-      ])
+  const addNew = (name: string, type: 'file' | 'folder') => {
+    if (type === 'file') {
+      setFiles((prev) => [...prev, { id: `projects/${project.id}/${name}`, name, type: 'file' }]);
     } else {
-      console.log("adding folder")
+      console.log('adding folder');
       setFiles((prev) => [
         ...prev,
         {
           id: `projects/${project.id}/${name}`,
           name,
-          type: "folder",
-          children: [],
-        },
-      ])
+          type: 'folder',
+          children: []
+        }
+      ]);
     }
-  }
+  };
 
   console.log(editorLanguage, 'editorLanguage');
 
   return (
-    <div className="w-screen flex grow h-screen">
+    <div className="w-screen flex grow h-[calc(100vh-44px)] bg-[rgb(36_38_43)]">
       <Sidebar
         project={project}
         files={files}
@@ -373,31 +362,33 @@ export function EditorCore({ project }: { project: IProject }) {
         deletingFolderId={deletingFolderId}
       />
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel className="p-2 flex flex-col" maxSize={80} minSize={30} defaultSize={60} ref={editorPanelRef}>
-          <div className="h-10 w-full flex gap-2 justify-center">
-            <Button loading={compileLoading} variant="outline" size={'sm'} className='gap-1' onClick={handleCompile}>
-              <Hammer className="w-4 h-4 mr-2" />
-              Compile
-            </Button>
-          </div>
-          <div className="h-10 w-full flex gap-2 overflow-auto tab-scroll">
-            {/* File tabs */}
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.id}
-                saved={tab.saved}
-                selected={activeFileId === tab.id}
-                onClick={() => {
-                  selectFile(tab);
-                }}
-                onClose={() => closeTab(tab.id)}
-              >
-                {tab.name}
-              </Tab>
-            ))}
+        <ResizablePanel className="flex flex-col gap-1" maxSize={80} minSize={30} defaultSize={60} ref={editorPanelRef}>
+          <div className="bg-background rounded-sm py-2 space-y-2">
+            <div className="w-full flex gap-2 justify-center">
+              <Button loading={compileLoading} variant="outline" size={'sm'} className="gap-1" onClick={handleCompile}>
+                <Hammer className="w-4 h-4 mr-2" />
+                Compile
+              </Button>
+            </div>
+            <div className="px-2 w-full flex gap-2 overflow-x-auto overflow-y-hidden tab-scroll">
+              {/* File tabs */}
+              {tabs.map((tab) => (
+                <Tab
+                  key={tab.id}
+                  saved={tab.saved}
+                  selected={activeFileId === tab.id}
+                  onClick={() => {
+                    selectFile(tab);
+                  }}
+                  onClose={() => closeTab(tab.id)}
+                >
+                  {tab.name}
+                </Tab>
+              ))}
+            </div>
           </div>
           {/* Monaco editor */}
-          <div ref={editorContainerRef} className="grow w-full overflow-hidden rounded-md relative">
+          <div ref={editorContainerRef} className="grow w-full overflow-hidden rounded-md relative bg-background">
             {!activeFileId ? (
               <>
                 <div className="w-full h-full flex items-center justify-center text-xl font-medium text-muted-foreground/50 select-none">
@@ -407,6 +398,7 @@ export function EditorCore({ project }: { project: IProject }) {
               </>
             ) : (
               <CairoEditor
+                className="bg-background"
                 height="100%"
                 language={editorLanguage}
                 beforeMount={handleEditorWillMount}
@@ -418,19 +410,6 @@ export function EditorCore({ project }: { project: IProject }) {
                     setTabs((prev) => prev.map((tab) => (tab.id === activeFileId ? { ...tab, saved: false } : tab)));
                   }
                 }}
-                // options={{
-                //   tabSize: 2,
-                //   minimap: {
-                //     enabled: false
-                //   },
-                //   padding: {
-                //     bottom: 4,
-                //     top: 4
-                //   },
-                //   scrollBeyondLastLine: false,
-                //   fixedOverflowWidgets: true,
-                //   fontFamily: 'var(--font-geist-mono)'
-                // }}
                 theme="vs-dark"
                 value={activeFileContent}
               />
