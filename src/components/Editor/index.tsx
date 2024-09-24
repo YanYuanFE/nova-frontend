@@ -9,13 +9,14 @@ import { useParams } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 import monaco from 'monaco-editor';
 import { BeforeMount, OnMount } from '@monaco-editor/react';
-import { FileJson, Hammer } from 'lucide-react';
+import { FileJson, Hammer, Rocket } from 'lucide-react';
 import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import Tab from '@/components/Tab';
 import { CairoEditor } from '@/components/Editor/CairoEditor';
 import { Button } from '../ui/button';
 import { Console, ILog, LogType } from '../Console';
+import { DeployCard } from './DeployCard';
 
 export function EditorCore({ project }: { project: IProject }) {
   const socketRef = useRef<Socket | null>(null);
@@ -32,12 +33,14 @@ export function EditorCore({ project }: { project: IProject }) {
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const monacoRef = useRef<typeof monaco | null>(null);
+  const [showCompile, setShowCompile] = useState(false);
   // const generateRef = useRef<HTMLDivElement>(null);
   // const generateWidgetRef = useRef<HTMLDivElement>(null);
   // const previewPanelRef = useRef<ImperativePanelHandle>(null);
   const editorPanelRef = useRef<ImperativePanelHandle>(null);
   const [compileLoading, setCompileLoading] = useState(false);
   const [logs, setLogs] = useState<ILog[]>([]);
+  const [compielData, setCompileData] = useState<any>();
 
   console.log(files, 'files');
 
@@ -201,6 +204,13 @@ export function EditorCore({ project }: { project: IProject }) {
       ]);
       if (response.files) {
         setFiles(response.files);
+      }
+      if(response.compiledData) {
+        const { casmData, sierraData } = response.compiledData;
+        setCompileData({
+          casmData: JSON.parse(casmData),
+          sierraData: JSON.parse(sierraData),
+        });
       }
       setCompileLoading(false);
     });
@@ -369,6 +379,12 @@ export function EditorCore({ project }: { project: IProject }) {
                 <Hammer className="w-4 h-4 mr-2" />
                 Compile
               </Button>
+              <Button variant="outline" size={'sm'} className="gap-1" onClick={() => {
+                setShowCompile(true);
+              }}>
+                <Rocket className="w-4 h-4 mr-2" />
+                Deploy
+              </Button>
             </div>
             <div className="px-2 w-full flex gap-2 overflow-x-auto overflow-y-hidden tab-scroll">
               {/* File tabs */}
@@ -417,6 +433,13 @@ export function EditorCore({ project }: { project: IProject }) {
           </div>
           <Console logs={logs} />
         </ResizablePanel>
+        {
+          showCompile ? (
+            <ResizablePanel>
+              <DeployCard compileData={compielData}/>
+            </ResizablePanel>
+          ) : null
+        }
       </ResizablePanelGroup>
     </div>
   );

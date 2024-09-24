@@ -46,7 +46,7 @@ const data: {
     {
       id: "cairo",
       name: "Cairo",
-      icon: "/project-icons/cairo.png",
+      icon: "/icons/cairo.png",
       description: "cairo project",
       disabled: false,
     },
@@ -65,7 +65,7 @@ const formSchema = z.object({
 })
 
 export function NewProjectModal() {
-  const [selected, setSelected] = useState<TOptions>("react")
+  const [selected, setSelected] = useState<TOptions>("cairo")
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -104,7 +104,7 @@ export function NewProjectModal() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create A Sandbox</DialogTitle>
+          <DialogTitle>Create Cairo Project</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 w-full gap-2 mt-2">
           {data.map((item) => (
@@ -166,11 +166,11 @@ export function NewProjectModal() {
                       <SelectItem value="private">Private</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
+                  {/* <FormDescription>
                     Note: All sandboxes cannot be seen by the public. Private
                     sandboxes cannot be accessed by shared users that you add,
                     while public sandboxes can.
-                  </FormDescription>
+                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
