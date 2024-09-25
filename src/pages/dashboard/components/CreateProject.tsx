@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,6 +32,7 @@ import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { createProject } from "@/services/project"
 import { toast } from "@/components/ui/use-toast"
+import { useNavigate } from "react-router-dom"
 
 type TOptions = "react" | "node" | "cairo" | "python" | "more"
 
@@ -46,7 +46,7 @@ const data: {
     {
       id: "cairo",
       name: "Cairo",
-      icon: "/icons/cairo.png",
+      icon: "/cairo.png",
       description: "cairo project",
       disabled: false,
     },
@@ -68,6 +68,7 @@ export function NewProjectModal() {
   const [selected, setSelected] = useState<TOptions>("cairo")
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,7 +90,9 @@ export function NewProjectModal() {
       variant: "default",
       title: "Project created",
       description: "Your project has been created",
-    })
+    });
+    setOpen(false)
+    navigate(`/project/${id}`);
   }
 
   return (

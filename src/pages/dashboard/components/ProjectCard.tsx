@@ -10,7 +10,7 @@ export const ProjectCard = ({project}:{project: any}) => {
         <Card
       tabIndex={0}
       onClick={() => navigate(`/project/${project.id}`)}
-      className={`group/canvas-card p-4 h-48 flex flex-col justify-between items-start hover:border-muted-foreground/50 relative overflow-hidden transition-all`}
+      className={`group/canvas-card cursor-pointer p-4 h-48 flex flex-col justify-between items-start hover:border-muted-foreground/50 relative overflow-hidden transition-all`}
     >
 
       <div className="space-x-2 flex items-center justify-start w-full z-10">

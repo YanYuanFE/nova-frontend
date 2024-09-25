@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { UserAuthForm } from "./UserAuthForm"
 import { Icons } from "@/components/icons"
+import WordRotate from "@/components/magicui/word-rotate"
 
 export const metadata = {
     title: "Authentication",
@@ -33,15 +34,15 @@ export default function SignIn() {
                         <Icons.logo className="mr-2 h-6 w-6" />
                         Nova
                     </div>
-                    <div className="relative z-20 mt-auto">
-                        <blockquote className="space-y-2">
-                            <p className="text-lg">
-                                &ldquo;This library has saved me countless hours of work and
-                                helped me deliver stunning designs to my clients faster than
-                                ever before.&rdquo;
-                            </p>
-                            <footer className="text-sm">Sofia Davis</footer>
-                        </blockquote>
+                    <div className="relative z-20 mt-20">
+                    <h1 className="font-display text-4xl font-bold tracking-tight text-white">
+                        Effortless <WordRotate
+                            className="text-white"
+                            words={["Develop", "Compile", "Deploy"]}
+                        /> with Nova IDE
+                    </h1>
+                    <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-gray-200">Quickly start your Cairo projects without the need for complex installations. Nova IDE is your go-to Web IDE for seamless coding.</p>
+                        
                     </div>
                 </div>
                 <div className="lg:p-8">
