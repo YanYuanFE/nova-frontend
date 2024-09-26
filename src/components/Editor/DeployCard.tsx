@@ -27,7 +27,7 @@ export const DeployCard = ({ compileData }:{compileData: {
     }
 
     const handleDeploy = async () => {
-        const { sierraData, casmData } = compileData;
+        const { sierraData } = compileData;
         const classHash = hash.computeContractClassHash(sierraData)
         const res = await account?.deploy({
             classHash,
