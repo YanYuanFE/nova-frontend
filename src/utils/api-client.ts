@@ -10,6 +10,7 @@ export type ApiRequestOptions = {
 };
 
 type ApiResponse = {
+  error?: string;
   message: string;
   statusCode: number;
   data: unknown;
@@ -63,7 +64,7 @@ export class ApiClient {
       if (options?.skipHandleError !== true) {
         toast({
           title: 'Something went wrong',
-          description: resData.message || 'Unknow error',
+          description: resData.error || resData.message || 'Unknow error',
           variant: 'destructive',
           className: 'z-[999]'
         });
