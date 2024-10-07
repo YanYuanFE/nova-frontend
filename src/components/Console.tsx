@@ -30,7 +30,7 @@ export const Console = ({ logs }: { logs: Array<ILog> }) => {
       <ScrollArea className="h-[200px]">
         <div className="leading-6 text-tiny text-gray-400 dark:text-darkMode-text">
             {logs.map((log, index) => (
-            <pre key={index} className="whitespace-pre-wrap break-words">
+            <pre key={index} className="whitespace-pre-wrap break-words text-sm">
                 {log.type === LogType.Error && <span className="text-red-500">[Error] </span>}
                 {log.type === LogType.Warn && <span className="text-yellow-500">[Warn] </span>}
                 {log.type === LogType.Info && <span className="text-green-500">[Info] </span>}
