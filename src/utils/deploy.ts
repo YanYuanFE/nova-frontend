@@ -125,7 +125,7 @@ async function handleContractDeployment({
   deploymentType: 'declare' | 'deploy';
 }) {
   const classHash = hash.computeContractClassHash(sierraData);
-  let compiledClassHash, constructorCalldata, res;
+  let compiledClassHash: string, constructorCalldata: any, res;
 
   if (deploymentType === 'declare') {
     compiledClassHash = hash.computeCompiledClassHash(casmData);
