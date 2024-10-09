@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 
 export default function Project() {
-  const { projectId } = useParams();
+  const { id:projectId } = useParams();
   const { data: project, isLoading } = useQuery({
     queryKey: ['project', projectId],
     queryFn: () => getProject(projectId as string),

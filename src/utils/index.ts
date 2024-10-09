@@ -5,6 +5,9 @@ export function getIconForFileName(name: string) {
   if (name.endsWith('.cairo')) {
     return 'file_type_cairo.png';
   }
+  if (name.endsWith('.toml')) {
+    return 'file_type_config.svg';
+  }
   return getIconForFile(name);
 }
 

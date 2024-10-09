@@ -42,7 +42,7 @@ export function EditorCore({ project }: { project: IProject }) {
   const [logs, setLogs] = useState<ILog[]>([]);
   const [compielData, setCompileData] = useState<any>();
 
-  console.log(files, 'files');
+  console.log(files, activeFileContent, 'files');
 
   // Initialize socket connection if it doesn't exist
   if (!socketRef.current && user) {
@@ -236,7 +236,7 @@ export function EditorCore({ project }: { project: IProject }) {
         console.log('has cache', fileCache.current.get(tab.id));
         setActiveFileContent(fileCache.current.get(tab.id));
       } else {
-        debouncedGetFile(tab.id, (response: SetStateAction<string>) => {
+        debouncedGetFile(tab.id, (response: string) => {
           console.log('no cache', response);
           fileCache.current.set(tab.id, response);
           setActiveFileContent(response);
@@ -435,7 +435,7 @@ export function EditorCore({ project }: { project: IProject }) {
         </ResizablePanel>
         {
           showCompile ? (
-            <ResizablePanel>
+            <ResizablePanel defaultSize={30}>
               <DeployCard compileData={compielData}/>
             </ResizablePanel>
           ) : null
