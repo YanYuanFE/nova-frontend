@@ -376,13 +376,13 @@ export function EditorCore({ project }: { project: IProject }) {
           <div className="bg-background rounded-sm py-2 space-y-2">
             <div className="w-full flex gap-2 justify-center">
               <Button loading={compileLoading} variant="outline" size={'sm'} className="gap-1" onClick={handleCompile}>
-                <Hammer className="w-4 h-4 mr-2" />
+                <Hammer className="w-4 h-4 mr-2 text-red-500" />
                 Compile
               </Button>
               <Button variant="outline" size={'sm'} className="gap-1" onClick={() => {
                 setShowCompile(true);
               }}>
-                <Rocket className="w-4 h-4 mr-2" />
+                <Rocket className="w-4 h-4 mr-2 text-emerald-500" />
                 Deploy
               </Button>
             </div>

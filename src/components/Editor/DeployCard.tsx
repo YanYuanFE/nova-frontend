@@ -15,7 +15,7 @@ export const DeployCard = ({
   };
 }) => {
   console.log('000compileData:', compileData);
-  const [network, setNetwork] = useState('devnet');
+  const [network, setNetwork] = useState('wallet');
   const { account, balance } = useAccountAndBalance(network);
 
   const handleNetwork = (value: string) => {
@@ -31,25 +31,25 @@ export const DeployCard = ({
   };
 
   return (
-    <div className="flex flex-col p-4">
-      <div className="m-6">
-        <div className="font-bold mb-2">Entertainment</div>
+    <div className="flex flex-col p-4 gap-6">
+      <div className="font-bold">Deployment</div>
+      <div className="">
+        <div className="font-bold mb-2">Environment</div>
         <Select value={network} onValueChange={handleNetwork}>
           <SelectTrigger className="w-48 rounded-xl">
-            <SelectValue placeholder="Select Entertainment" />
+            <SelectValue placeholder="Select Environment" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="devnet">Devnet</SelectItem>
-            <SelectItem value="sepolia">Sepolia</SelectItem>
+            <SelectItem value="wallet">Wallet</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      <div className="m-6">
+      <div className="">
         <AccountBalanceDisplay account={account!} balance={balance!} />
       </div>
-      <div className="m-6">
-        <div className="font-bold mb-2">Deployment</div>
-        <div className="p-6 space-y-6">
+      <div className="">
+        <div className="space-y-6">
           <div>
             <Button onClick={handleDeclare}>Declare</Button>
           </div>
