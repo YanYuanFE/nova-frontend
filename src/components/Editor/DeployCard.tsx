@@ -1,10 +1,12 @@
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState } from 'react';
-import { doDeclare, doDeploy } from '@/utils/deploy';
+import { declare, deploy } from '@/utils/deploy';
 import { AccountBalanceDisplay } from './components/Account';
 import { useAccountAndBalance } from '@/hooks/useAccountAndBalance';
 import { CompiledContract, CompiledSierraCasm } from 'starknet';
+import { ConstructorForm } from 'starknet-abi-forms';
+import { useContractData } from '@/hooks/useContractData';
 
 export const DeployCard = ({
   compileData
@@ -15,6 +17,7 @@ export const DeployCard = ({
   };
 }) => {
   console.log('000compileData:', compileData);
+  const { contractData } = useContractData({ compileData });
   const [network, setNetwork] = useState('devnet');
   const { account, balance } = useAccountAndBalance(network);
 
@@ -22,12 +25,12 @@ export const DeployCard = ({
     setNetwork(value);
   };
 
-  const handleDeclare = () => {
-    doDeclare(account!, compileData?.sierraData, compileData?.casmData);
+  const handleDeclare = async () => {
+    await declare(account!, contractData?.sierra, contractData?.classHash, contractData?.compiledClassHash);
   };
 
-  const handleDeploy = () => {
-    doDeploy(account!, compileData?.sierraData);
+  const handleDeploy = async () => {
+    await deploy(account!, contractData?.classHash, []);
   };
 
   return (
@@ -40,7 +43,7 @@ export const DeployCard = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="devnet">Devnet</SelectItem>
-            <SelectItem value="sepolia">Sepolia</SelectItem>
+            <SelectItem value="sepolia">Wallet</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -54,7 +57,7 @@ export const DeployCard = ({
             <Button onClick={handleDeclare}>Declare</Button>
           </div>
           <div>
-            <Button onClick={handleDeploy}>Deploy</Button>
+            <ConstructorForm abi={null} callBackFn={handleDeploy} />
           </div>
         </div>
       </div>

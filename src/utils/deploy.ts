@@ -1,41 +1,31 @@
-import { hash, AccountInterface, CompiledSierraCasm, CompiledContract } from 'starknet';
+import { AccountInterface, CompiledContract, BigNumberish } from 'starknet';
 
-async function doDeclare(
+async function declare(
   account: AccountInterface | null,
-  sierraData: CompiledContract | string,
-  casmData: CompiledSierraCasm
+  contract: CompiledContract | string,
+  classHash: string,
+  compiledClassHash: string
 ) {
-  console.log('111 account:', account, 'sierraData:', sierraData, 'casmData:', casmData);
-  const classHash = hash.computeContractClassHash(sierraData); //sierraFile?
-  let compiledClassHash = '';
-  if (casmData) {
-    compiledClassHash = hash.computeCompiledClassHash(casmData);
-  }
-
-  console.log('222 classHash:', classHash, 'compiledClassHash:', compiledClassHash);
-
   try {
-    const res = await account?.declare({
-      contract: sierraData,
+    await account?.declare({
+      contract: contract,
       classHash: classHash,
-      casm: casmData,
       compiledClassHash: compiledClassHash
     });
-
-    console.log('declare res:', JSON.stringify(res));
   } catch (error) {
     console.log('declare error:', error);
   }
 }
 
-async function doDeploy(account: AccountInterface | null, sierraData: CompiledContract | string) {
-  const classHash = hash.computeContractClassHash(sierraData);
-
-  const constructorCalldata: [] = []; //TODO
-  await account?.deploy({
-    classHash,
-    constructorCalldata
-  });
+async function deploy(account: AccountInterface | null, classHash: string, calldata: BigNumberish[]) {
+  try {
+    await account?.deploy({
+      classHash: classHash,
+      constructorCalldata: calldata
+    });
+  } catch (error) {
+    console.log('deploy error:', error);
+  }
 }
 
-export { doDeclare, doDeploy };
+export { declare, deploy };
