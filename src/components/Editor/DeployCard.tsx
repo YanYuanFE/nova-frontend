@@ -1,7 +1,7 @@
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState } from 'react';
-import { handleContractDeployment } from '@/utils/deploy';
+import { doDeclare, doDeploy } from '@/utils/deploy';
 import { AccountBalanceDisplay } from './components/Account';
 import { useAccountAndBalance } from '@/hooks/useAccountAndBalance';
 import { CompiledContract, CompiledSierraCasm } from 'starknet';
@@ -14,6 +14,7 @@ export const DeployCard = ({
     sierraData: CompiledContract | string;
   };
 }) => {
+  console.log('000compileData:', compileData);
   const [network, setNetwork] = useState('devnet');
   const { account, balance } = useAccountAndBalance(network);
 
@@ -22,21 +23,11 @@ export const DeployCard = ({
   };
 
   const handleDeclare = () => {
-    handleContractDeployment({
-      account,
-      sierraData: compileData.sierraData,
-      casmData: compileData.casmData,
-      deploymentType: 'declare'
-    });
+    doDeclare(account!, compileData?.sierraData, compileData?.casmData);
   };
 
   const handleDeploy = () => {
-    handleContractDeployment({
-      account,
-      sierraData: compileData.sierraData,
-      casmData: compileData.casmData,
-      deploymentType: 'deploy'
-    });
+    doDeploy(account!, compileData?.sierraData);
   };
 
   return (
@@ -54,7 +45,7 @@ export const DeployCard = ({
         </Select>
       </div>
       <div className="m-6">
-        <AccountBalanceDisplay account={account} balance={balance!} />
+        <AccountBalanceDisplay account={account!} balance={balance!} />
       </div>
       <div className="m-6">
         <div className="font-bold mb-2">Deployment</div>

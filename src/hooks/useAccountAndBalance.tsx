@@ -1,11 +1,11 @@
-import { getDevBanlance, produceDevAccount } from '@/utils/deploy';
+import { getDevBanlance, produceDevAccount } from '@/utils/account';
 import { useAccount } from '@starknet-react/core';
 import { useMemo, useState } from 'react';
 import { AccountInterface } from 'starknet';
 
 export const useAccountAndBalance = (network: string) => {
   const { account: sepoliaAccount } = useAccount();
-  const [account, setAccount] = useState<AccountInterface>();
+  const [account, setAccount] = useState<AccountInterface | null>();
   const [balance, setBalance] = useState<string>();
 
   useMemo(() => {
