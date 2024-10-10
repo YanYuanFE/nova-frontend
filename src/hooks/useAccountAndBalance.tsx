@@ -15,7 +15,7 @@ export const useAccountAndBalance = (network: string) => {
         const devBalance = await getDevBanlance(devAcc!.address);
         setAccount(devAcc!);
         setBalance(devBalance);
-      } else if (network === 'sepolia') {
+      } else if (network === 'wallet') {
         setAccount(sepoliaAccount);
         setBalance('');
       }

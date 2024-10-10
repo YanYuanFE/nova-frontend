@@ -4,28 +4,36 @@ async function declare(
   account: AccountInterface | null,
   contract: CompiledContract | string,
   classHash: string,
-  compiledClassHash: string
+  compiledClassHash: string,
+  casm: any
 ) {
   try {
     await account?.declare({
       contract: contract,
       classHash: classHash,
-      compiledClassHash: compiledClassHash
+      compiledClassHash: compiledClassHash,
+      casm: casm
     });
   } catch (error) {
     console.log('declare error:', error);
   }
 }
 
-async function deploy(account: AccountInterface | null, classHash: string, calldata: BigNumberish[]) {
-  try {
-    await account?.deploy({
-      classHash: classHash,
-      constructorCalldata: calldata
-    });
-  } catch (error) {
-    console.log('deploy error:', error);
-  }
-}
+const deploy = async (
+  account: AccountInterface | null,
+  classHash: string,
+  calldata: BigNumberish[]
+): Promise<
+  | {
+      contract_address: Array<string>;
+      transaction_hash: string;
+    }
+  | undefined
+> => {
+  return await account?.deploy({
+    classHash: classHash,
+    constructorCalldata: calldata
+  });
+};
 
 export { declare, deploy };

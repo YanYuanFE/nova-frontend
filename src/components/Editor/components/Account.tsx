@@ -10,10 +10,12 @@ export const AccountBalanceDisplay = ({
   balance: string;
 }) => {
   return (
-    <>
-      <div className="font-bold mb-2">Account</div>
-      {account ? <Input value={account?.address} /> : <ConnectModal />}
-      <span>balance: {balance}</span>
-    </>
+    <div className="space-y-2">
+      <h3 className="text-sm font-medium">Connect Account</h3>
+      <div className="flex flex-row gap-2 items-center">
+        {!account ? <Input value={''} /> : <ConnectModal />}
+        <span>balance: {balance}</span>
+      </div>
+    </div>
   );
 };
