@@ -3,7 +3,7 @@ import Sidebar from '@/components/Editor/Navbar';
 import { ENVS } from '@/constants/config';
 import { IProject, TFile, TFolder, TTab } from '@/types';
 import { debounce, processFileType, validateName } from '@/utils';
-import { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
