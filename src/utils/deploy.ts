@@ -1,23 +1,23 @@
 import { AccountInterface, CompiledContract, BigNumberish } from 'starknet';
 
-async function declare(
+const declare = async (
   account: AccountInterface | null,
   contract: CompiledContract | string,
   classHash: string,
-  compiledClassHash: string,
-  casm: any
-) {
+  casm: any,
+  compiledClassHash: string
+) => {
   try {
     await account?.declare({
       contract: contract,
       classHash: classHash,
-      compiledClassHash: compiledClassHash,
-      casm: casm
+      casm: casm,
+      compiledClassHash: compiledClassHash
     });
   } catch (error) {
     console.log('declare error:', error);
   }
-}
+};
 
 const deploy = async (
   account: AccountInterface | null,
@@ -30,10 +30,15 @@ const deploy = async (
     }
   | undefined
 > => {
-  return await account?.deploy({
-    classHash: classHash,
-    constructorCalldata: calldata
-  });
+  console.log('deploying contract with calldata:', calldata);
+  try {
+    return await account?.deploy({
+      classHash: classHash,
+      constructorCalldata: calldata
+    });
+  } catch (error) {
+    console.log('deploy error:', error);
+  }
 };
 
 export { declare, deploy };

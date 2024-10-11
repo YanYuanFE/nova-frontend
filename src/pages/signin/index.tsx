@@ -19,9 +19,15 @@ export default function SignIn() {
             Nova
           </div>
           <div className="relative z-20 mt-20">
-            <img src="https://www.cairo-lang.org/wp-content/uploads/2024/04/Cairo-logo-hero-shadow-opt.png" className='w-[200px]' alt="" />
+            <img
+              src="https://www.cairo-lang.org/wp-content/uploads/2024/04/Cairo-logo-hero-shadow-opt.png"
+              className="w-[200px]"
+              alt=""
+            />
             <h1 className="font-display text-4xl font-bold tracking-tight text-white flex items-center gap-2">
-              Effortless <WordRotate className="text-white w-[135px] text-center" words={['Develop', 'Compile', 'Deploy']} /> with Nova IDE
+              Effortless{' '}
+              <WordRotate className="text-white w-[145px] text-center" words={['Develop', 'Compile', 'Deploy']} /> with
+              Nova IDE
             </h1>
             <p className="mt-6 max-w-2xl text-lg tracking-tight text-gray-200">
               Quickly start your Cairo projects without the need for complex installations. Nova IDE is your go-to Web

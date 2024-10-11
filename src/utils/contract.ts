@@ -3,7 +3,7 @@ import {
   type InvokeFunctionResponse,
   type AccountInterface,
   BigNumberish,
-  CompiledSierra
+  CompiledContract
 } from 'starknet';
 
 interface Contract {
@@ -11,7 +11,7 @@ interface Contract {
   compiledClassHash: string;
   classHash: string;
   sierraClassHash: string;
-  sierra: CompiledSierra;
+  sierra: CompiledContract | string;
   casm: CairoAssembly;
   abi: Abi;
   address: string;
@@ -83,4 +83,8 @@ export type {
   ParameterMetadata
 };
 
-export { ParameterType };
+function getConstructor(abi: Abi) {
+  if (!abi) return null;
+  return abi.find((item) => item.name === 'constructor') as AbiElement;
+}
+export { ParameterType, getConstructor };
