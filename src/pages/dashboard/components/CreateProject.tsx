@@ -80,19 +80,25 @@ export function NewProjectModal() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
 
-    const data = { type: selected, ...values }
-    setLoading(true)
+    try {
+      const data = { type: selected, ...values }
+      setLoading(true)
 
-    const id = await createProject(data);
-    setLoading(false)
-    console.log(id)
-    toast({
-      variant: "default",
-      title: "Project created",
-      description: "Your project has been created",
-    });
-    setOpen(false)
-    navigate(`/project/${id}`);
+      const id = await createProject(data);
+      setLoading(false)
+      console.log(id)
+      toast({
+        variant: "default",
+        title: "Project created",
+        description: "Your project has been created",
+      });
+      setOpen(false)
+      navigate(`/project/${id}`);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

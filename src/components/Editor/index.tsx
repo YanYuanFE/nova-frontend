@@ -208,8 +208,8 @@ export function EditorCore({ project }: { project: IProject }) {
       if(response.compiledData) {
         const { casmData, sierraData } = response.compiledData;
         setCompileData({
-          casmData: JSON.parse(casmData),
-          sierraData: JSON.parse(sierraData),
+          casmData: casmData ? JSON.parse(casmData) : null,
+          sierraData: sierraData ? JSON.parse(sierraData) : null,
         });
       }
       setCompileLoading(false);
@@ -380,6 +380,10 @@ export function EditorCore({ project }: { project: IProject }) {
                 Compile
               </Button>
               <Button variant="outline" size={'sm'} className="gap-1" onClick={() => {
+                if(!compielData?.casmData || !compielData?.sierraData) {
+                  toast.error('Please compile the project first');
+                  return;
+                }
                 setShowCompile(true);
               }}>
                 <Rocket className="w-4 h-4 mr-2 text-emerald-500" />
@@ -407,9 +411,12 @@ export function EditorCore({ project }: { project: IProject }) {
           <div ref={editorContainerRef} className="grow w-full overflow-hidden rounded-md relative bg-background">
             {!activeFileId ? (
               <>
-                <div className="w-full h-full flex items-center justify-center text-xl font-medium text-muted-foreground/50 select-none">
-                  <FileJson className="w-6 h-6 mr-3" />
-                  No file selected.
+                <div className="flex flex-col h-full items-center justify-center">
+                  <img src="https://www.cairo-lang.org/wp-content/uploads/2024/04/Cairo-logo-hero-shadow-opt.png" alt="Cairo" className="w-20" />
+                  <div className="w-full flex items-center justify-center text-xl font-medium text-muted-foreground/50 select-none">
+                    <FileJson className="w-6 h-6 mr-3" />
+                    No file selected.
+                  </div>
                 </div>
               </>
             ) : (

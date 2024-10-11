@@ -6,6 +6,8 @@ import { ThemeProvider } from './components/theme-provider.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from './components/ui/toaster.tsx'
 import { StarknetProvider } from './components/StarkProvider.tsx'
+import { Toaster as HotToaster } from 'react-hot-toast';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Router />
         </StarknetProvider>
         <Toaster />
+        <HotToaster />
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>,
