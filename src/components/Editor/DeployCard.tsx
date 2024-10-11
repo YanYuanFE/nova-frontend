@@ -8,6 +8,7 @@ import { shortenAddress } from '@/utils';
 import { ExternalLink } from 'lucide-react';
 import ConstructorCard from './components/constructor-card';
 import Enviroment from './components/Enviroment';
+import { useNetwork } from '@starknet-react/core';
 
 type Status = 'start' | 'declare' | 'deploy' | 'done';
 
@@ -24,6 +25,7 @@ export const DeployCard = ({
   const { contractData } = useContractData({ compileData });
   const { account, balance } = useAccountAndBalance(env);
   const [status, setStatus] = useState<Status>('start');
+  const { chain } = useNetwork();
   console.log(account, balance, 'ccc');
   console.log('111contractData:', contractData);
 
