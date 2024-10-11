@@ -1,29 +1,33 @@
 import { getDevBanlance, produceDevAccount } from '@/utils/account';
 import { useAccount } from '@starknet-react/core';
-import { useMemo, useState } from 'react';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { AccountInterface } from 'starknet';
+
+interface AccountData {
+  account: AccountInterface | undefined;
+  balance: string;
+}
 
 export const useAccountAndBalance = (env: string) => {
   const { account: walletAccount } = useAccount();
-  const [account, setAccount] = useState<AccountInterface | null>();
-  const [balance, setBalance] = useState<string>();
 
-  useMemo(() => {
-    const setupAccount = async () => {
+  const { data }: UseQueryResult<AccountData, Error> = useQuery<AccountData, Error>({
+    queryKey: [env,walletAccount],
+    queryFn: async (): Promise<AccountData> => {
       if (env === 'devnet') {
         const devAcc = await produceDevAccount();
         console.log('devAcc:', devAcc);
         const devBalance = await getDevBanlance(devAcc!.address);
-        setAccount(devAcc!);
-        setBalance(devBalance);
+        return { account: devAcc!, balance: devBalance };
       } else if (env === 'wallet') {
-        setAccount(walletAccount);
-        setBalance('');
+        return { account: walletAccount, balance: '' };
       }
-    };
+      return { account: undefined, balance: '' };
+    },
+    initialData: { account: undefined, balance: '' }
+  });
 
-    setupAccount();
-  }, [env, walletAccount]);
+  console.log('qureydata:', data);
 
-  return { account, balance };
+  return { account: data?.account, balance: data?.balance };
 };

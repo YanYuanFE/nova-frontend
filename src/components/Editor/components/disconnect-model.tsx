@@ -1,37 +1,37 @@
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import { shortenAddress } from '@/utils';
-import { useAccount, useDisconnect } from '@starknet-react/core';
-import { LogOut } from 'lucide-react';
+import { useAccount, useConnect, useDisconnect, useNetwork } from '@starknet-react/core';
+import { ClipboardCopy } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export function DisConnectModel() {
   const { disconnect } = useDisconnect();
-
+  const { connector } = useConnect();
+  const { chain } = useNetwork();
   const { address } = useAccount();
-  const shortAddr = shortenAddress(address);
 
-  const buttonClasses =
-    'font-semibold py-2 px-4 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1';
+  const handleCopy = () => {
+    navigator.clipboard.writeText(address!);
+    toast.success('Copied to clipboard!');
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className={buttonClasses}>{shortAddr}</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white rounded-full shadow-lg">
-        <DropdownMenuItem
-          onClick={() => disconnect()}
-          className="flex items-center px-4 py-2 text-sm text-red-600 rounded-full"
-        >
-          <LogOut className="h-4 w-4" />
+    <div className="flex flex-col items-center gap-2">
+      <div>
+        <span className="inline-block font-semibold mr-3 ">{connector?.name}</span>
+        <span>{chain?.name}</span>
+      </div>
+      <div className="flex items-center">
+        <span className="mr-2">{shortenAddress(address)}</span>
+        <Button onClick={handleCopy} className="mr-2 bg-transparent hover:bg-transparent">
+          <ClipboardCopy className="mr-2 h-4 w-4" />
+        </Button>
+      </div>
+      <div className="w-full">
+        <Button onClick={() => disconnect()} variant="outline" className="mr-2 w-full">
           Disconnect
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </Button>
+      </div>
+    </div>
   );
 }

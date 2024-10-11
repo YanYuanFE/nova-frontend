@@ -2,20 +2,18 @@ import { AccountInterface } from 'starknet';
 import { DisConnectModel } from './disconnect-model';
 import ConnectModel from './connect-model';
 import { Input } from '@/components/ui/input';
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 export const AccountCard = ({
   env,
   account,
-  balance,
   onStatus
 }: {
   env: string;
   account: AccountInterface | undefined;
-  balance: string;
   onStatus: any;
 }) => {
-  useEffect(() => {
+  useCallback(() => {
     console.log('account', account);
     if (account) {
       onStatus('declare');
@@ -25,7 +23,6 @@ export const AccountCard = ({
   }, [account]);
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium">Connect Account</h3>
       <div className="flex flex-row gap-2 items-center">
         {account ? (
           env === 'devnet' ? (
@@ -36,7 +33,6 @@ export const AccountCard = ({
         ) : (
           <ConnectModel />
         )}
-        <span>balance: {balance}</span>
       </div>
     </div>
   );
