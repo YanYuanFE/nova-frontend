@@ -3,20 +3,15 @@ import { Contract } from './contract';
 import toast from 'react-hot-toast';
 
 const declare = async (account: AccountInterface | null, contractData: Contract) => {
-  try {
-    const res = await account?.declare({
-      contract: contractData?.sierra,
-      classHash: contractData?.classHash,
-      casm: contractData?.casm,
-      compiledClassHash: contractData?.compiledClassHash
-    });
+  const res = await account?.declare({
+    contract: contractData?.sierra,
+    classHash: contractData?.classHash,
+    casm: contractData?.casm,
+    compiledClassHash: contractData?.compiledClassHash
+  });
 
-    const txReceipt = await account?.waitForTransaction(res!.transaction_hash);
-    console.log(txReceipt, 'txReceipt');
-    toast.success('Declare success');
-  } catch (error) {
-    toast.error('Declare failed');
-  }
+  const txReceipt = await account?.waitForTransaction(res!.transaction_hash);
+  return txReceipt;
 };
 
 const deploy = async (
@@ -31,16 +26,12 @@ const deploy = async (
   | undefined
 > => {
   console.log('deploying contract with calldata:', calldata);
-  try {
-    const res = await account?.deploy({
-      classHash: classHash,
-      constructorCalldata: calldata
-    });
-    toast.success('Deploy success');
-    return res;
-  } catch (error) {
-    toast.error('Deploy failed');
-  }
+  const res = await account?.deploy({
+    classHash: classHash,
+    constructorCalldata: calldata
+  });
+  toast.success('Deploy success');
+  return res;
 };
 
 export { declare, deploy };

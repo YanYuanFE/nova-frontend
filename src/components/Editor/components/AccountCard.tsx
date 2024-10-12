@@ -20,8 +20,6 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
     }
   });
 
-  console.log('000 devAccList:', devAccList);
-
   const handleChange = (value: string) => {
     const selectedAccount = devAccList?.find((acc: any) => acc.address === value);
     setDevAcc(selectedAccount);
@@ -30,9 +28,9 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
   if (isLoading) return <div>Loading DevAccount...</div>;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <h3 className="text-sm font-medium">Connect Account</h3>
-      <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row gap-2 items-center w-full">
         {env === 'devnet' ? (
           <Select value={devAcc?.address} onValueChange={handleChange}>
             <SelectTrigger className="w-full rounded-xl">

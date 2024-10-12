@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Abi, getConstructor } from '@/utils/contract';
-import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ConstructorCard({
@@ -32,7 +31,7 @@ export default function ConstructorCard({
   };
 
   return (
-    <div className="p-4 bg-neutral-500  shadow-lg rounded-lg">
+    <div className="p-4 bg-card shadow-lg rounded-lg">
       <h1 className="text-base font-semibold mb-4">Constructor</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -56,8 +55,8 @@ export default function ConstructorCard({
           })}
         </div>
 
-        <Button type="submit" disabled={isDeploying} className="w-full rounded-md">
-          {isDeploying ? <Loader2 className="h-5 w-5 text-gray-300 animate-spin" /> : <span>Deploy</span>}
+        <Button loading={isDeploying} type="submit" className="w-full rounded-md">
+          Deploy
         </Button>
       </form>
     </div>

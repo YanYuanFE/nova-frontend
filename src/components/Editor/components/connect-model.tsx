@@ -34,11 +34,11 @@ export default function ConnectModel() {
   return (
     <>
       {isLoading ? (
-        <Button disabled className="rounded-xl opacity-50 cursor-not-allowed">
+        <Button disabled className="opacity-50 cursor-not-allowed w-full">
           Connecting...
         </Button>
       ) : (
-        <Button onClick={handleConnect} className="rounded-xl">
+        <Button onClick={handleConnect} className=" w-full">
           Connect Wallet
         </Button>
       )}

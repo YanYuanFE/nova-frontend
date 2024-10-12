@@ -1,15 +1,16 @@
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { declare, deploy } from '@/utils/deploy';
 import { useAccountAndBalance } from '@/hooks/useAccountAndBalance';
 import { CompiledContract, CompiledSierraCasm } from 'starknet';
 import { useContractData } from '@/hooks/useContractData';
 import { shortenAddress } from '@/utils';
-import { ExternalLink, Loader2 } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import ConstructorCard from './components/constructor-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { AccountCard } from './components/AccountCard';
 import { useNetwork } from '@starknet-react/core';
+import toast from 'react-hot-toast';
 
 export const DeployCard = ({
   compileData
@@ -22,26 +23,48 @@ export const DeployCard = ({
   const [env, setEnv] = useState<string>('wallet');
   const [contractAddress, setContractAddress] = useState<string>('');
   const { contractData } = useContractData({ compileData });
-  const [isDeclareing, setIsDeclareing] = useState<boolean>(false);
+  const [isDeclaring, setIsDeclaring] = useState<boolean>(false);
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
   const { account } = useAccountAndBalance(env);
   const { chain } = useNetwork();
-  console.log('111contractData:', contractData);
+
+  useEffect(() => {
+    console.log('Updated isDeclareing:', isDeclaring);
+  }, [isDeclaring]);
 
   const handleDeclare = async () => {
-    setIsDeclareing(true);
-    console.log('ddd', contractData);
-    await declare(account!, contractData);
-    setIsDeclareing(false);
+    if (!account) {
+      toast.error('Please choose account first');
+      return;
+    }
+    setIsDeclaring(true);
+    try {
+      const res = await declare(account!, contractData);
+      console.log('txReceipt:', res);
+      toast.success('Declare success');
+    } catch (error) {
+      toast.error('Declare failed');
+    } finally {
+      setIsDeclaring(false);
+    }
   };
 
   const handleDeploy = async (calldata: any[]) => {
     setIsDeploying(true);
-    const res = await deploy(account!, contractData?.classHash, calldata);
-    console.log('res:', res);
-    if (res) {
-      setContractAddress(res.contract_address[0]);
+    try {
+      const res = await deploy(account!, contractData?.classHash, calldata);
+      console.log('deploy res:', res);
+      if (res) {
+        setContractAddress(res.contract_address[0]);
+      }
+
+      toast.success('Deploy success');
+    } catch (error) {
+      toast.error('Deploy failed');
+    } finally {
+      setIsDeploying(false);
     }
+
     setIsDeploying(false);
   };
 
@@ -54,7 +77,7 @@ export const DeployCard = ({
       <div className="font-bold text-2xl">Deployment</div>
       <div className="space-y-2">
         <h3 className=" font-bold text-lg">Environment</h3>
-        <div className="p-4 bg-neutral-500 shadow-lg rounded-lg w-full">
+        <div className="p-4 bg-card shadow-lg rounded-lg w-full">
           <Select value={env} onValueChange={handleNetwork}>
             <SelectTrigger className="w-full rounded-xl">
               <SelectValue placeholder="Select Environment" />
@@ -71,9 +94,9 @@ export const DeployCard = ({
       </div>
       <div className="space-y-2">
         <h3 className=" font-bold text-lg">Declare Contract</h3>
-        <div className="p-4 bg-neutral-500 shadow-lg rounded-lg ">
-          <Button disabled={isDeclareing} onClick={handleDeclare} className="w-full">
-            {isDeclareing ? <Loader2 className="h-5 w-5 text-gray-300 animate-spin" /> : <span>Declare</span>}
+        <div className="p-4 bg-card shadow-lg rounded-lg ">
+          <Button loading={isDeclaring} onClick={handleDeclare} className="w-full">
+            Declare
           </Button>
         </div>
       </div>
