@@ -1,4 +1,5 @@
 import { getIconForFile } from 'vscode-icons-js';
+import dayjs from 'dayjs';
 
 export function getIconForFileName(name: string) {
   // 判断name以.cairo结尾
@@ -50,4 +51,8 @@ export function processFileType(file: string) {
 export const shortenAddress = (address?: string) => {
   if (!address) return null;
   return `${address?.substring(0, 6)}...${address?.substring(address.length - 4, address.length)}`;
+};
+
+export const formatDateTime = (time: number) => {
+  return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
 };

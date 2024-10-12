@@ -1,5 +1,5 @@
-import { DisConnectModel } from './disconnect-model';
-import ConnectModel from './connect-model';
+import { DisConnectModal } from './disconnect-modal';
+import ConnectModel from './connect-modal';
 import { useQuery } from '@tanstack/react-query';
 import { produceDevAccountList } from '@/utils/account';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -44,7 +44,7 @@ export const AccountCard = ({ env }: { env: string }) => {
             </SelectContent>
           </Select>
         ) : walletAccount ? (
-          <DisConnectModel />
+          <DisConnectModal />
         ) : (
           <ConnectModel />
         )}

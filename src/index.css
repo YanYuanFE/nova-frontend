@@ -78,3 +78,7 @@
 .tab-scroll::-webkit-scrollbar {
   display: none;
 }
+
+body {
+  font-family: 'Geist Sans', sans-serif;
+}

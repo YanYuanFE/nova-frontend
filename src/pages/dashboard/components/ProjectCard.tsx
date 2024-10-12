@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card"
 import { useNavigate } from "react-router-dom";
 import { Clock, Globe, Lock } from "lucide-react"
+import { formatDateTime } from "@/utils";
 
 
 
@@ -44,7 +45,7 @@ export const ProjectCard = ({project}:{project: any}) => {
           )}
         </div>
         <div className="flex items-center">
-          <Clock className="w-3 h-3 mr-2" /> {project.createdAt}
+          <Clock className="w-3 h-3 mr-2" /> {formatDateTime(project.createdAt)}
         </div>
       </div>
     </Card>

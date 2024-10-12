@@ -2,7 +2,7 @@ import { useAccount, useConnect } from '@starknet-react/core';
 import { useStarknetkitConnectModal } from 'starknetkit';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { DisConnectModel } from './disconnect-model';
+import { DisConnectModal } from './disconnect-modal';
 import { Button } from '@/components/ui/button';
 
 export default function ConnectModel() {
@@ -28,7 +28,7 @@ export default function ConnectModel() {
   };
 
   if (address) {
-    return <DisConnectModel />;
+    return <DisConnectModal />;
   }
 
   return (

@@ -451,7 +451,7 @@ export function EditorCore({ project }: { project: IProject }) {
         </ResizablePanel>
         {showCompile ? (
           <ResizablePanel defaultSize={30}>
-            <DeployCard compileData={compielData} />
+            <DeployCard compileData={compielData} onClose={() => setShowCompile(false)} />
           </ResizablePanel>
         ) : null}
       </ResizablePanelGroup>

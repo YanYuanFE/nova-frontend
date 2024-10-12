@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { UserAuthForm } from './UserAuthForm';
 import { Icons } from '@/components/icons';
 import WordRotate from '@/components/magicui/word-rotate';
+import { BackgroundBeams } from '@/components/ui/background-beams';
 
 export const metadata = {
   title: 'Authentication',
@@ -14,6 +15,7 @@ export default function SignIn() {
       <div className="container relative h-screen flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-zinc-900" />
+
           <div className="relative z-20 flex items-center text-lg font-medium">
             <Icons.logo className="mr-2 h-6 w-6" />
             Nova
@@ -24,16 +26,14 @@ export default function SignIn() {
               className="w-[200px]"
               alt=""
             />
-            <h1 className="font-display text-4xl font-bold tracking-tight text-white flex items-center gap-2">
-              Effortless{' '}
-              <WordRotate className="text-white w-[145px] text-center" words={['Develop', 'Compile', 'Deploy']} /> with
-              Nova IDE
+            <h1 className="font-display text-3xl font-bold tracking-tight flex items-center gap-2 mt-10 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600">
+              Unleashing the Power of Cairo Development.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg tracking-tight text-gray-200">
-              Quickly start your Cairo projects without the need for complex installations. Nova IDE is your go-to Web
-              IDE for seamless coding.
+            <p className="mt-6 max-w-2xl text-md tracking-tight text-gray-400">
+            Nova is the all-in-one web IDE for Cairo development on StarkNet, streamlining the entire process from code creation to contract deployment and debugging—all within your browser. Experience unparalleled customization, seamless UX, and future-ready tools 
             </p>
           </div>
+          <BackgroundBeams />
         </div>
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">

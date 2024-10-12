@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+// Supports weights 100-900
+import '@fontsource/geist-sans';
 import './index.css'
 import { Router } from './Router.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'

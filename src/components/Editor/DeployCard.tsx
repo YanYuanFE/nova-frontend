@@ -4,7 +4,7 @@ import { declare, deploy } from '@/utils/deploy';
 import { AccountInterface, CompiledContract, CompiledSierraCasm } from 'starknet';
 import { useContractData } from '@/hooks/useContractData';
 import { shortenAddress } from '@/utils';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
 import ConstructorCard from './components/constructor-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { AccountCard } from './components/AccountCard';
@@ -13,12 +13,14 @@ import toast from 'react-hot-toast';
 import { useAllAccounts } from '@/hooks/useAccountProvider';
 
 export const DeployCard = ({
-  compileData
+  compileData,
+  onClose
 }: {
   compileData: {
     casmData: CompiledSierraCasm;
     sierraData: CompiledContract | string;
   };
+  onClose: () => void;
 }) => {
   const [env, setEnv] = useState<string>('wallet');
   const [account, setAccount] = useState<AccountInterface | undefined>(undefined);
@@ -82,7 +84,12 @@ export const DeployCard = ({
 
   return (
     <div className="flex flex-col p-4 gap-6 h-[600px] overflow-y-auto">
-      <div className="font-bold text-2xl">Deployment</div>
+      <div className="flex items-center justify-between">
+        <div className="font-bold text-2xl">Deployment</div>
+        <Button variant="ghost" size="icon" className='w-6 h-6' onClick={onClose}>
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
       <div className="space-y-2">
         <h3 className=" font-bold text-lg">Environment</h3>
         <div className="p-4 bg-card shadow-lg rounded-lg w-full">

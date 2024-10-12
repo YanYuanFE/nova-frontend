@@ -9,8 +9,9 @@ import {
 import { useAccount, useDisconnect } from '@starknet-react/core';
 import toast from 'react-hot-toast';
 import { ChevronDown, ClipboardCopy, LogOut } from 'lucide-react';
+import { shortenAddress } from '@/utils';
 
-export function DisConnectModel() {
+export function DisConnectModal() {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
 
@@ -23,19 +24,19 @@ export function DisConnectModel() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-full">
         <Button type="button" className="flex justify-center items-center">
-          <span className="flex-1 text-center overflow-hidden truncate">{address}</span>
+          <span className="flex-1 text-center overflow-hidden truncate">{shortenAddress(address!)}</span>
           <ChevronDown className={'opacity-50 self-end pb-1'} size={19} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-96 rounded-lg shadow-lg">
-        <DropdownMenuItem onClick={handleCopy} className="flex items-center px-4 py-2 text-sm   w-full">
+      <DropdownMenuContent className="w-[264px] rounded-lg shadow-lg">
+        <DropdownMenuItem onClick={handleCopy} className="flex items-center px-4 py-2 text-sm w-full">
           <ClipboardCopy className="mr-2 h-4 w-4" />
           Copy Address
         </DropdownMenuItem>
         <DropdownMenuSeparator className="my-1 border-gray-200 w-full" />
         <DropdownMenuItem
           onClick={() => disconnect()}
-          className="flex items-center px-4 py-2 text-sm text-red-600 w-full"
+          className="flex items-center px-4 py-2 text-sm w-full"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Disconnect
