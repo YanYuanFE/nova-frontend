@@ -23,7 +23,7 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
   console.log('000 devAccList:', devAccList);
 
   const handleChange = (value: string) => {
-    const selectedAccount = devAccList?.find((acc) => acc.address === value);
+    const selectedAccount = devAccList?.find((acc: any) => acc.address === value);
     setDevAcc(selectedAccount);
   };
 
@@ -39,7 +39,7 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
               <SelectValue placeholder="Select Devnet Account" />
             </SelectTrigger>
             <SelectContent>
-              {devAccList?.map((acc, index) => (
+              {devAccList?.map((acc: any, index: any) => (
                 <SelectItem value={acc.address} key={index}>
                   {acc.address}
                 </SelectItem>

@@ -9,11 +9,7 @@ import { ExternalLink, Loader2 } from 'lucide-react';
 import ConstructorCard from './components/constructor-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { AccountCard } from './components/AccountCard';
-import toast from 'react-hot-toast';
-import Enviroment from './components/Enviroment';
 import { useNetwork } from '@starknet-react/core';
-
-type Status = 'start' | 'declare' | 'deploy' | 'done';
 
 export const DeployCard = ({
   compileData
@@ -26,13 +22,10 @@ export const DeployCard = ({
   const [env, setEnv] = useState<string>('wallet');
   const [contractAddress, setContractAddress] = useState<string>('');
   const { contractData } = useContractData({ compileData });
-  const { account } = useAccountAndBalance(env);
   const [isDeclareing, setIsDeclareing] = useState<boolean>(false);
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
-  const { account, balance } = useAccountAndBalance(env);
-  const [status, setStatus] = useState<Status>('start');
+  const { account } = useAccountAndBalance(env);
   const { chain } = useNetwork();
-  console.log(account, balance, 'ccc');
   console.log('111contractData:', contractData);
 
   const handleDeclare = async () => {
