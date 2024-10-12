@@ -1,8 +1,7 @@
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { declare, deploy } from '@/utils/deploy';
-import { useAccountAndBalance } from '@/hooks/useAccountAndBalance';
-import { CompiledContract, CompiledSierraCasm } from 'starknet';
+import { AccountInterface, CompiledContract, CompiledSierraCasm } from 'starknet';
 import { useContractData } from '@/hooks/useContractData';
 import { shortenAddress } from '@/utils';
 import { ExternalLink } from 'lucide-react';
@@ -11,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { AccountCard } from './components/AccountCard';
 import { useNetwork } from '@starknet-react/core';
 import toast from 'react-hot-toast';
+import { useAllAccounts } from '@/hooks/useAccountProvider';
 
 export const DeployCard = ({
   compileData
@@ -21,16 +21,24 @@ export const DeployCard = ({
   };
 }) => {
   const [env, setEnv] = useState<string>('wallet');
+  const [account, setAccount] = useState<AccountInterface | undefined>(undefined);
   const [contractAddress, setContractAddress] = useState<string>('');
   const { contractData } = useContractData({ compileData });
   const [isDeclaring, setIsDeclaring] = useState<boolean>(false);
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
-  const { account } = useAccountAndBalance(env);
+  const { walletAccount, devAccount } = useAllAccounts();
   const { chain } = useNetwork();
 
   useEffect(() => {
-    console.log('Updated isDeclareing:', isDeclaring);
-  }, [isDeclaring]);
+    switch (env) {
+      case 'wallet':
+        setAccount(walletAccount);
+        break;
+      case 'devnet':
+        setAccount(devAccount);
+        break;
+    }
+  }, [env, account, walletAccount, devAccount]);
 
   const handleDeclare = async () => {
     if (!account) {
@@ -88,7 +96,7 @@ export const DeployCard = ({
             </SelectContent>
           </Select>
           <div className="mt-4">
-            <AccountCard env={env} account={account!} />
+            <AccountCard env={env} />
           </div>
         </div>
       </div>

@@ -1,13 +1,12 @@
-import { AccountInterface } from 'starknet';
 import { DisConnectModel } from './disconnect-model';
 import ConnectModel from './connect-model';
 import { useQuery } from '@tanstack/react-query';
 import { produceDevAccountList } from '@/utils/account';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useState } from 'react';
+import { useAllAccounts } from '@/hooks/useAccountProvider';
 
-export const AccountCard = ({ env, account }: { env: string; account: AccountInterface | undefined }) => {
-  const [devAcc, setDevAcc] = useState<AccountInterface | undefined>(account);
+export const AccountCard = ({ env }: { env: string }) => {
+  const { walletAccount, devAccount, setDevAccount } = useAllAccounts();
 
   const { data: devAccList, isLoading } = useQuery({
     queryKey: [env],
@@ -22,7 +21,7 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
 
   const handleChange = (value: string) => {
     const selectedAccount = devAccList?.find((acc: any) => acc.address === value);
-    setDevAcc(selectedAccount);
+    setDevAccount(selectedAccount);
   };
 
   if (isLoading) return <div>Loading DevAccount...</div>;
@@ -32,7 +31,7 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
       <h3 className="text-sm font-medium">Connect Account</h3>
       <div className="flex flex-row gap-2 items-center w-full">
         {env === 'devnet' ? (
-          <Select value={devAcc?.address} onValueChange={handleChange}>
+          <Select value={devAccount?.address} onValueChange={handleChange}>
             <SelectTrigger className="w-full rounded-xl">
               <SelectValue placeholder="Select Devnet Account" />
             </SelectTrigger>
@@ -44,7 +43,7 @@ export const AccountCard = ({ env, account }: { env: string; account: AccountInt
               ))}
             </SelectContent>
           </Select>
-        ) : account ? (
+        ) : walletAccount ? (
           <DisConnectModel />
         ) : (
           <ConnectModel />
