@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { UserAuthForm } from './UserAuthForm';
 import { Icons } from '@/components/icons';
-import WordRotate from '@/components/magicui/word-rotate';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 
 export const metadata = {
