@@ -205,11 +205,11 @@ export function EditorCore({ project }: { project: IProject }) {
       if (response.files) {
         setFiles(response.files);
       }
-      if(response.compiledData) {
+      if (response.compiledData) {
         const { casmData, sierraData } = response.compiledData;
         setCompileData({
           casmData: casmData ? JSON.parse(casmData) : null,
-          sierraData: sierraData ? JSON.parse(sierraData) : null,
+          sierraData: sierraData ? JSON.parse(sierraData) : null
         });
       }
       setCompileLoading(false);
@@ -379,13 +379,18 @@ export function EditorCore({ project }: { project: IProject }) {
                 <Hammer className="w-4 h-4 mr-2 text-red-500" />
                 Compile
               </Button>
-              <Button variant="outline" size={'sm'} className="gap-1" onClick={() => {
-                if(!compielData?.casmData || !compielData?.sierraData) {
-                  toast.error('Please compile the project first');
-                  return;
-                }
-                setShowCompile(true);
-              }}>
+              <Button
+                variant="outline"
+                size={'sm'}
+                className="gap-1"
+                onClick={() => {
+                  if (!compielData?.casmData || !compielData?.sierraData) {
+                    toast.error('Please compile the project first');
+                    return;
+                  }
+                  setShowCompile(true);
+                }}
+              >
                 <Rocket className="w-4 h-4 mr-2 text-emerald-500" />
                 Deploy
               </Button>
@@ -412,7 +417,11 @@ export function EditorCore({ project }: { project: IProject }) {
             {!activeFileId ? (
               <>
                 <div className="flex flex-col h-full items-center justify-center">
-                  <img src="https://www.cairo-lang.org/wp-content/uploads/2024/04/Cairo-logo-hero-shadow-opt.png" alt="Cairo" className="w-20" />
+                  <img
+                    src="https://www.cairo-lang.org/wp-content/uploads/2024/04/Cairo-logo-hero-shadow-opt.png"
+                    alt="Cairo"
+                    className="w-20"
+                  />
                   <div className="w-full flex items-center justify-center text-xl font-medium text-muted-foreground/50 select-none">
                     <FileJson className="w-6 h-6 mr-3" />
                     No file selected.
@@ -440,13 +449,11 @@ export function EditorCore({ project }: { project: IProject }) {
           </div>
           <Console logs={logs} />
         </ResizablePanel>
-        {
-          showCompile ? (
-            <ResizablePanel defaultSize={30}>
-              <DeployCard compileData={compielData}/>
-            </ResizablePanel>
-          ) : null
-        }
+        {showCompile ? (
+          <ResizablePanel defaultSize={30}>
+            <DeployCard compileData={compielData} />
+          </ResizablePanel>
+        ) : null}
       </ResizablePanelGroup>
     </div>
   );

@@ -1,21 +1,21 @@
-import { AccountInterface, CompiledContract, BigNumberish } from 'starknet';
+import { AccountInterface, BigNumberish } from 'starknet';
+import { Contract } from './contract';
+import toast from 'react-hot-toast';
 
-const declare = async (
-  account: AccountInterface | null,
-  contract: CompiledContract | string,
-  classHash: string,
-  casm: any,
-  compiledClassHash: string
-) => {
+const declare = async (account: AccountInterface | null, contractData: Contract) => {
   try {
-    await account?.declare({
-      contract: contract,
-      classHash: classHash,
-      casm: casm,
-      compiledClassHash: compiledClassHash
+    const res = await account?.declare({
+      contract: contractData?.sierra,
+      classHash: contractData?.classHash,
+      casm: contractData?.casm,
+      compiledClassHash: contractData?.compiledClassHash
     });
+
+    const txReceipt = await account?.waitForTransaction(res!.transaction_hash);
+    console.log(txReceipt, 'txReceipt');
+    toast.success('Declare success');
   } catch (error) {
-    console.log('declare error:', error);
+    toast.error('Declare failed');
   }
 };
 
@@ -32,12 +32,14 @@ const deploy = async (
 > => {
   console.log('deploying contract with calldata:', calldata);
   try {
-    return await account?.deploy({
+    const res = await account?.deploy({
       classHash: classHash,
       constructorCalldata: calldata
     });
+    toast.success('Deploy success');
+    return res;
   } catch (error) {
-    console.log('deploy error:', error);
+    toast.error('Deploy failed');
   }
 };
 

@@ -1,13 +1,18 @@
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { shortenAddress } from '@/utils';
-import { useAccount, useConnect, useDisconnect, useNetwork } from '@starknet-react/core';
-import { ClipboardCopy } from 'lucide-react';
+import { useAccount, useDisconnect } from '@starknet-react/core';
 import toast from 'react-hot-toast';
+import { ClipboardCopy, LogOut } from 'lucide-react';
 
 export function DisConnectModel() {
   const { disconnect } = useDisconnect();
-  const { connector } = useConnect();
-  const { chain } = useNetwork();
   const { address } = useAccount();
 
   const handleCopy = () => {
@@ -16,22 +21,27 @@ export function DisConnectModel() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div>
-        <span className="inline-block font-semibold mr-3 ">{connector?.name}</span>
-        <span>{chain?.name}</span>
-      </div>
-      <div className="flex items-center">
-        <span className="mr-2">{shortenAddress(address)}</span>
-        <Button onClick={handleCopy} className="mr-2 bg-transparent hover:bg-transparent">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button>{shortenAddress(address)}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56 bg-white rounded-lg shadow-lg">
+        <DropdownMenuItem
+          onClick={handleCopy}
+          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
           <ClipboardCopy className="mr-2 h-4 w-4" />
-        </Button>
-      </div>
-      <div className="w-full">
-        <Button onClick={() => disconnect()} variant="outline" className="mr-2 w-full">
+          Copy Address
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="my-1 border-gray-200" />
+        <DropdownMenuItem
+          onClick={() => disconnect()}
+          className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
           Disconnect
-        </Button>
-      </div>
-    </div>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

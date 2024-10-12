@@ -1,9 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Abi, getConstructor } from '@/utils/contract';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
-export default function ConstructorCard({ abi, onDeploy, status }: { abi: Abi; onDeploy: any; status: string }) {
+export default function ConstructorCard({
+  abi,
+  onDeploy,
+  isDeploying
+}: {
+  abi: Abi;
+  onDeploy: any;
+  isDeploying: boolean;
+}) {
   const inputs = getConstructor(abi)?.inputs ?? [];
   const [inputValues, setinputValues] = useState<any>({});
 
@@ -47,8 +56,8 @@ export default function ConstructorCard({ abi, onDeploy, status }: { abi: Abi; o
           })}
         </div>
 
-        <Button type="submit" disabled={status !== 'deploy'} className="w-full rounded-md">
-          Deploy
+        <Button type="submit" disabled={isDeploying} className="w-full rounded-md">
+          {isDeploying ? <Loader2 className="h-5 w-5 text-gray-300 animate-spin" /> : <span>Deploy</span>}
         </Button>
       </form>
     </div>
