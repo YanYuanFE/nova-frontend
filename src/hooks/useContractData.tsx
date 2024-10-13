@@ -8,6 +8,8 @@ export const useContractData = ({ compileData }: { compileData: any }) => {
       const classHash = hash.computeContractClassHash(compileData?.sierraData);
       const compiledClassHash = hash.computeCompiledClassHash(compileData?.casmData);
 
+      console.log(compileData, 'compileData');
+
       return {
         name: '',
         sierra: compileData?.sierraData,

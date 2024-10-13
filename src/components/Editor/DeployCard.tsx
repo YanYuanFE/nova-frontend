@@ -11,6 +11,7 @@ import { AccountCard } from './components/AccountCard';
 import { useNetwork } from '@starknet-react/core';
 import toast from 'react-hot-toast';
 import { useAllAccounts } from '@/hooks/useAccountProvider';
+import { ScrollArea } from '../ui/scroll-area';
 
 export const DeployCard = ({
   compileData,
@@ -83,7 +84,8 @@ export const DeployCard = ({
   };
 
   return (
-    <div className="flex flex-col p-4 gap-6 h-[600px] overflow-y-auto">
+    <ScrollArea className="h-[calc(100vh-44px)]">
+      <div className="flex flex-col p-4 gap-6">
       <div className="flex items-center justify-between">
         <div className="font-bold text-2xl">Deployment</div>
         <Button variant="ghost" size="icon" className='w-6 h-6' onClick={onClose}>
@@ -136,5 +138,6 @@ export const DeployCard = ({
         </div>
       ) : null}
     </div>
+    </ScrollArea>
   );
 };

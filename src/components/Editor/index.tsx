@@ -355,8 +355,6 @@ export function EditorCore({ project }: { project: IProject }) {
     }
   };
 
-  console.log(editorLanguage, 'editorLanguage');
-
   return (
     <div className="w-screen flex grow h-[calc(100vh-44px)] bg-[rgb(36_38_43)]">
       <Sidebar

@@ -30,7 +30,6 @@ const deploy = async (
     classHash: classHash,
     constructorCalldata: calldata
   });
-  toast.success('Deploy success');
   return res;
 };
 
