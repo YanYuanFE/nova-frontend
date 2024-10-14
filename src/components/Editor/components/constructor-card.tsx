@@ -6,11 +6,13 @@ import { useState } from 'react';
 export default function ConstructorCard({
   abi,
   onDeploy,
-  isDeploying
+  isDeploying,
+  classHash
 }: {
   abi: Abi;
   onDeploy: any;
   isDeploying: boolean;
+  classHash: string;
 }) {
   const inputs = getConstructor(abi)?.inputs ?? [];
   const [inputValues, setinputValues] = useState<any>({});
@@ -55,7 +57,7 @@ export default function ConstructorCard({
           })}
         </div>
 
-        <Button loading={isDeploying} type="submit" className="w-full rounded-md">
+        <Button loading={isDeploying} disabled={!classHash} type="submit" className="w-full rounded-md">
           Deploy
         </Button>
       </form>

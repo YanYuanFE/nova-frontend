@@ -4,13 +4,14 @@ import React from 'react';
 import { mainnet, sepolia } from '@starknet-react/chains';
 import {
   StarknetConfig,
-  publicProvider,
   argent,
   braavos,
   useInjectedConnectors,
   voyager,
-  InjectedConnector
+  InjectedConnector,
+  infuraProvider
 } from '@starknet-react/core';
+import { ENVS } from '@/constants/config';
 
 export function StarknetProvider({ children }: { children: React.ReactNode }) {
   const { connectors } = useInjectedConnectors({
@@ -31,7 +32,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
   return (
     <StarknetConfig
       chains={[mainnet, sepolia]}
-      provider={publicProvider()}
+      provider={infuraProvider({apiKey: ENVS.INFURA_API_KEY})}
       connectors={connectors}
       explorer={voyager}
       autoConnect

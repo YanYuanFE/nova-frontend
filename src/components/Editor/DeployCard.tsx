@@ -1,7 +1,7 @@
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { declare, deploy } from '@/utils/deploy';
-import { AccountInterface, CompiledContract, CompiledSierraCasm } from 'starknet';
+import { AccountInterface, CompiledContract, CompiledSierraCasm, extractContractHashes } from 'starknet';
 import { useContractData } from '@/hooks/useContractData';
 import { shortenAddress } from '@/utils';
 import { ExternalLink, X } from 'lucide-react';
@@ -31,6 +31,7 @@ export const DeployCard = ({
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
   const { walletAccount, devAccount } = useAllAccounts();
   const { chain } = useNetwork();
+  const [classHash, setClassHash] = useState<string>('');
 
   useEffect(() => {
     switch (env) {
@@ -49,12 +50,24 @@ export const DeployCard = ({
       return;
     }
     setIsDeclaring(true);
+    const {classHash} = extractContractHashes({
+      contract: contractData?.sierra,
+      casm: compileData?.casmData,
+    });
     try {
+      console.log('contractHashes:', classHash);
+      const classRes = await account.getClassByHash(classHash);
+      console.log('Class already exists', classRes)
+      if (classRes) {
+        setClassHash(classHash);
+        toast.success('Contract has been declared');
+      }
+    } catch (error) {
       const res = await declare(account!, contractData);
       console.log('txReceipt:', res);
+      setClassHash(contractData?.classHash);
       toast.success('Declare success');
-    } catch (error) {
-      toast.error('Declare failed');
+      // toast.error('Declare failed');
     } finally {
       setIsDeclaring(false);
     }
@@ -119,7 +132,7 @@ export const DeployCard = ({
       </div>
       <div className="space-y-2">
         <h3 className=" font-bold text-lg">Deploy Contract</h3>
-        <ConstructorCard abi={contractData?.abi} onDeploy={handleDeploy} isDeploying={isDeploying} />
+        <ConstructorCard abi={contractData?.abi} onDeploy={handleDeploy} isDeploying={isDeploying} classHash={classHash} />
       </div>
       {contractAddress ? (
         <div className="space-y-2">

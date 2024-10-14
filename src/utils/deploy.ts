@@ -4,9 +4,9 @@ import { Contract } from './contract';
 const declare = async (account: AccountInterface | null, contractData: Contract) => {
   const res = await account?.declare({
     contract: contractData?.sierra,
-    classHash: contractData?.classHash,
-    casm: contractData?.casm,
-    compiledClassHash: contractData?.compiledClassHash
+    casm: contractData?.casm
+    // classHash: contractData?.classHash,
+    // compiledClassHash: contractData?.compiledClassHash
   });
 
   const txReceipt = await account?.waitForTransaction(res!.transaction_hash);
