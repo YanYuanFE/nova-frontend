@@ -1,6 +1,5 @@
 import { AccountInterface, BigNumberish } from 'starknet';
 import { Contract } from './contract';
-import toast from 'react-hot-toast';
 
 const declare = async (account: AccountInterface | null, contractData: Contract) => {
   const res = await account?.declare({
