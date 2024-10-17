@@ -16,7 +16,8 @@ export const AccountCard = ({ env }: { env: string }) => {
         return res;
       }
       return [];
-    }
+    },
+    staleTime: 1000 * 60 * 60 * 24
   });
 
   const handleChange = (value: string) => {
@@ -32,7 +33,7 @@ export const AccountCard = ({ env }: { env: string }) => {
       <div className="flex flex-row gap-2 items-center w-full">
         {env === 'devnet' ? (
           <Select value={devAccount?.address} onValueChange={handleChange}>
-            <SelectTrigger className="w-full rounded-xl">
+            <SelectTrigger className="rounded-xl w-96">
               <SelectValue placeholder="Select Devnet Account" />
             </SelectTrigger>
             <SelectContent>

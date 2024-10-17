@@ -49,25 +49,31 @@ export const DeployCard = ({
       toast.error('Please choose account first');
       return;
     }
+
+    console.log('selectAccount:', account);
     setIsDeclaring(true);
-    const {classHash} = extractContractHashes({
+    const { classHash } = extractContractHashes({
       contract: contractData?.sierra,
-      casm: compileData?.casmData,
+      casm: compileData?.casmData
     });
     try {
-      console.log('contractHashes:', classHash);
-      const classRes = await account.getClassByHash(classHash);
-      console.log('Class already exists', classRes)
-      if (classRes) {
-        setClassHash(classHash);
-        toast.success('Contract has been declared');
+      try {
+        console.log('contractHashes:', classHash);
+        const classRes = await account.getClassByHash(classHash);
+        console.log('Class already exists', classRes);
+        if (classRes) {
+          setClassHash(classHash);
+          toast.success('Contract has been declared');
+        }
+      } catch (error) {
+        const res = await declare(account!, contractData);
+        console.log('txReceipt:', res);
+        setClassHash(contractData?.classHash);
+        toast.success('Declare success');
+        // toast.error('Declare failed');
       }
-    } catch (error) {
-      const res = await declare(account!, contractData);
-      console.log('txReceipt:', res);
-      setClassHash(contractData?.classHash);
-      toast.success('Declare success');
-      // toast.error('Declare failed');
+    } catch (error: any) {
+      console.log('declare error:', error?.message);
     } finally {
       setIsDeclaring(false);
     }
@@ -99,58 +105,63 @@ export const DeployCard = ({
   return (
     <ScrollArea className="h-[calc(100vh-44px)]">
       <div className="flex flex-col p-4 gap-6">
-      <div className="flex items-center justify-between">
-        <div className="font-bold text-2xl">Deployment</div>
-        <Button variant="ghost" size="icon" className='w-6 h-6' onClick={onClose}>
-          <X className="w-4 h-4" />
-        </Button>
-      </div>
-      <div className="space-y-2">
-        <h3 className=" font-bold text-lg">Environment</h3>
-        <div className="p-4 bg-card shadow-lg rounded-lg w-full">
-          <Select value={env} onValueChange={handleNetwork}>
-            <SelectTrigger className="w-full rounded-xl">
-              <SelectValue placeholder="Select Environment" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="devnet">Devnet</SelectItem>
-              <SelectItem value="wallet">Wallet</SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="mt-4">
-            <AccountCard env={env} />
-          </div>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <h3 className=" font-bold text-lg">Declare Contract</h3>
-        <div className="p-4 bg-card shadow-lg rounded-lg ">
-          <Button loading={isDeclaring} onClick={handleDeclare} className="w-full">
-            Declare
+        <div className="flex items-center justify-between">
+          <div className="font-bold text-2xl">Deployment</div>
+          <Button variant="ghost" size="icon" className="w-6 h-6" onClick={onClose}>
+            <X className="w-4 h-4" />
           </Button>
         </div>
-      </div>
-      <div className="space-y-2">
-        <h3 className=" font-bold text-lg">Deploy Contract</h3>
-        <ConstructorCard abi={contractData?.abi} onDeploy={handleDeploy} isDeploying={isDeploying} classHash={classHash} />
-      </div>
-      {contractAddress ? (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium">Deployed Contract Address</h3>
-          <div className="flex items-center gap-2">
-            {shortenAddress(contractAddress)}
-            <span
-              className="cursor-pointer"
-              onClick={() => {
-                window.open(`https://space-abi.vercel.app/${chain.network}/${contractAddress}`, '_blank');
-              }}
-            >
-              <ExternalLink size={16} />
-            </span>
+          <h3 className=" font-bold text-lg">Environment</h3>
+          <div className="p-4 bg-card shadow-lg rounded-lg w-full">
+            <Select value={env} onValueChange={handleNetwork}>
+              <SelectTrigger className="w-full rounded-xl">
+                <SelectValue placeholder="Select Environment" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="devnet">Devnet</SelectItem>
+                <SelectItem value="wallet">Wallet</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="mt-4">
+              <AccountCard env={env} />
+            </div>
           </div>
         </div>
-      ) : null}
-    </div>
+        <div className="space-y-2">
+          <h3 className=" font-bold text-lg">Declare Contract</h3>
+          <div className="p-4 bg-card shadow-lg rounded-lg ">
+            <Button loading={isDeclaring} onClick={handleDeclare} className="w-full">
+              Declare
+            </Button>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <h3 className=" font-bold text-lg">Deploy Contract</h3>
+          <ConstructorCard
+            abi={contractData?.abi}
+            onDeploy={handleDeploy}
+            isDeploying={isDeploying}
+            classHash={classHash}
+          />
+        </div>
+        {contractAddress ? (
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Deployed Contract Address</h3>
+            <div className="flex items-center gap-2">
+              {shortenAddress(contractAddress)}
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  window.open(`https://space-abi.vercel.app/${chain.network}/${contractAddress}`, '_blank');
+                }}
+              >
+                <ExternalLink size={16} />
+              </span>
+            </div>
+          </div>
+        ) : null}
+      </div>
     </ScrollArea>
   );
 };

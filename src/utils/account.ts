@@ -67,7 +67,7 @@ async function mintDevToken(address: string) {
       },
       body: JSON.stringify({
         address: address,
-        amount: 50000000000000,
+        amount: 10_000_000_000_000_000_000,
         unit: 'WEI'
       })
     });
@@ -95,25 +95,19 @@ async function getDevBanlance(address: string): Promise<string> {
 }
 
 const produceDevAccountList = async () => {
-  const localList = localStorage.getItem('accountList');
-  if (localList) {
-    return JSON.parse(localList);
-  } else {
-    const accountList: AccountInterface[] = [];
-    const promises = [];
+  const accountList: AccountInterface[] = [];
+  const promises = [];
 
-    for (let i = 0; i < 10; i++) {
-      const accountPromise = produceDevAccount().then((account) => {
-        accountList.push(account!);
-        return mintDevToken(account!.address);
-      });
-      promises.push(accountPromise);
-    }
-
-    await Promise.all(promises);
-    localStorage.setItem('accountList', JSON.stringify(accountList));
-    return accountList;
+  for (let i = 0; i < 10; i++) {
+    const accountPromise = produceDevAccount().then((account) => {
+      accountList.push(account!);
+      return mintDevToken(account!.address);
+    });
+    promises.push(accountPromise);
   }
+
+  await Promise.all(promises);
+  return accountList;
 };
 
 export { produceDevAccount, getDevBanlance, produceDevAccountList };
