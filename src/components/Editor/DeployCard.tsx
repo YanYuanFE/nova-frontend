@@ -12,6 +12,7 @@ import { useNetwork } from '@starknet-react/core';
 import toast from 'react-hot-toast';
 import { useAllAccounts } from '@/hooks/useAccountProvider';
 import { ScrollArea } from '../ui/scroll-area';
+import FunctionForm from './components/FunctionForm';
 
 export const DeployCard = ({
   compileData,
@@ -104,7 +105,7 @@ export const DeployCard = ({
 
   return (
     <ScrollArea className="h-[calc(100vh-44px)]">
-      <div className="flex flex-col p-4 gap-6">
+      <div className="flex flex-col p-4 gap-6 max-w-[450px]">
         <div className="flex items-center justify-between">
           <div className="font-bold text-2xl">Deployment</div>
           <Button variant="ghost" size="icon" className="w-6 h-6" onClick={onClose}>
@@ -130,7 +131,7 @@ export const DeployCard = ({
         </div>
         <div className="space-y-2">
           <h3 className=" font-bold text-lg">Declare Contract</h3>
-          <div className="p-4 bg-card shadow-lg rounded-lg ">
+          <div className="p-4 bg-card shadow-lg rounded-lg">
             <Button loading={isDeclaring} onClick={handleDeclare} className="w-full">
               Declare
             </Button>
@@ -146,20 +147,7 @@ export const DeployCard = ({
           />
         </div>
         {contractAddress ? (
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium">Deployed Contract Address</h3>
-            <div className="flex items-center gap-2">
-              {shortenAddress(contractAddress)}
-              <span
-                className="cursor-pointer"
-                onClick={() => {
-                  window.open(`https://space-abi.vercel.app/${chain.network}/${contractAddress}`, '_blank');
-                }}
-              >
-                <ExternalLink size={16} />
-              </span>
-            </div>
-          </div>
+          <FunctionForm contractAddress={contractAddress} account={account} network={env === 'devnet' ? 'devnet' : chain.network} />
         ) : null}
       </div>
     </ScrollArea>

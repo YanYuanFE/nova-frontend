@@ -1,9 +1,9 @@
-import { DEV_NODEURL } from '@/constants/config';
 import { ec, stark, hash, CallData, Account, AccountInterface } from 'starknet';
-import { getDevProvider } from './provider';
+import { getRpcProvider } from './provider';
+import { chainMap } from '@/constants/config';
 
 async function produceDevAccount(): Promise<AccountInterface | undefined> {
-  const provider = getDevProvider();
+  const provider = getRpcProvider('devnet');
 
   const privateKey = stark.randomAddress();
   console.log('New OZ account:\nprivateKey=', privateKey);
@@ -60,7 +60,7 @@ async function mintDevToken(address: string) {
   if (!address) return;
 
   try {
-    const response = await fetch(`${DEV_NODEURL}mint`, {
+    const response = await fetch(`${chainMap['devnet'].rpcUrl}mint`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -83,8 +83,8 @@ async function getDevBanlance(address: string): Promise<string> {
   if (!address) return 'unknown';
 
   try {
-    const data = await fetch(`${DEV_NODEURL}account_balance?address=${address}&unit=WEI`).then((response) =>
-      response.json()
+    const data = await fetch(`${chainMap['devnet'].rpcUrl}account_balance?address=${address}&unit=WEI`).then(
+      (response) => response.json()
     );
     console.log('余额', data?.amount);
     return data?.amount;

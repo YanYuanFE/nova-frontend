@@ -1,9 +1,16 @@
-import { DEV_NODEURL } from '@/constants/config';
+import { chainMap } from '@/constants/config';
 import { RpcProvider } from 'starknet';
 
-function getDevProvider() {
-  const provider = new RpcProvider({ nodeUrl: DEV_NODEURL });
-  return provider;
-}
+// function getDevProvider() {
+//   const provider = new RpcProvider({ nodeUrl: DEV_NODEURL });
+//   return provider;
+// }
 
-export { getDevProvider };
+const getRpcProvider = (network: string) => {
+  const rpcProvider = new RpcProvider({
+    nodeUrl: chainMap[network as keyof typeof chainMap]?.rpcUrl
+  });
+  return rpcProvider;
+};
+
+export { getRpcProvider };
