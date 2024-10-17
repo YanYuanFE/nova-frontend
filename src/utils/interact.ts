@@ -53,8 +53,11 @@ const write = async (value: CallbackReturnType, address: string, intearctNetwork
 };
 
 const stringifyResult = (result: any) => {
+  if (result === null || result === undefined) {
+    return '';
+  }
   if (typeof result === 'object') {
-    return JSON.stringify(result, (key, value) => (typeof value === 'bigint' ? value.toString() : value));
+    return JSON.stringify(result, (_, value) => (typeof value === 'bigint' ? value.toString() : value));
   } else {
     return result.toString();
   }
