@@ -34,32 +34,30 @@ export default function FunctionForm({
   }
   return (
     <div className="space-y-2">
-      <h3 className=" font-bold text-lg">Interact Contract</h3>
+      <h3 className="font-bold text-lg">Interact Contract</h3>
       <div className="p-4 bg-card shadow-lg rounded-lg">
         {functionsData?.map((fn: any, index: number) => {
           return (
-            <FunctionItem
-              key={index}
-              fnMsg={fn}
-              account={account}
-              contractAddress={contractAddress}
-              network={network}
-            />
+            <div key={index} className={index < functionsData.length - 1 ? 'mb-4' : ''}>
+              <FunctionItem fnMsg={fn} account={account} contractAddress={contractAddress} network={network} />
+            </div>
           );
         })}
       </div>
 
-      <div className="flex items-center gap-2">
-        {shortenAddress(contractAddress)}
-        <span
-          className="cursor-pointer"
-          onClick={() => {
-            window.open(`https://space-abi.vercel.app/${network}/${contractAddress}`, '_blank');
-          }}
-        >
-          <ExternalLink size={16} />
-        </span>
-      </div>
+      {network === 'devnet' ? null : (
+        <div className="flex items-center gap-2">
+          {shortenAddress(contractAddress)}
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              window.open(`https://space-abi.vercel.app/${network}/${contractAddress}`, '_blank');
+            }}
+          >
+            <ExternalLink size={16} />
+          </span>
+        </div>
+      )}
     </div>
   );
 }

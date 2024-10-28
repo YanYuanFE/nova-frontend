@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { declare, deploy } from '@/utils/deploy';
 import { AccountInterface, CompiledContract, CompiledSierraCasm, extractContractHashes } from 'starknet';
 import { useContractData } from '@/hooks/useContractData';
-import {  X } from 'lucide-react';
+import { X } from 'lucide-react';
 import ConstructorCard from './components/constructor-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { AccountCard } from './components/AccountCard';
@@ -56,12 +56,14 @@ export const DeployCard = ({
       contract: contractData?.sierra,
       casm: compileData?.casmData
     });
+    
     try {
       try {
         console.log('contractHashes:', classHash);
         const classRes = await account.getClassByHash(classHash);
-        console.log('Class already exists', classRes);
+
         if (classRes) {
+          console.log('Class already exists', classRes);
           setClassHash(classHash);
           toast.success('Contract has been declared');
         }
@@ -94,8 +96,6 @@ export const DeployCard = ({
     } finally {
       setIsDeploying(false);
     }
-
-    setIsDeploying(false);
   };
 
   const handleNetwork = (value: string) => {
@@ -146,7 +146,11 @@ export const DeployCard = ({
           />
         </div>
         {contractAddress ? (
-          <FunctionForm contractAddress={contractAddress} account={account} network={env === 'devnet' ? 'devnet' : chain.network} />
+          <FunctionForm
+            contractAddress={contractAddress}
+            account={account}
+            network={env === 'devnet' ? 'devnet' : chain.network}
+          />
         ) : null}
       </div>
     </ScrollArea>

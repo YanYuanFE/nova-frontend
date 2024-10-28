@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { produceDevAccountList } from '@/utils/account';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAllAccounts } from '@/hooks/useAccountProvider';
+import { shortenAddress } from '@/utils';
 
 export const AccountCard = ({ env }: { env: string }) => {
   const { walletAccount, devAccount, setDevAccount } = useAllAccounts();
@@ -21,8 +22,8 @@ export const AccountCard = ({ env }: { env: string }) => {
   });
 
   const handleChange = (value: string) => {
-    const selectedAccount = devAccList?.find((acc: any) => acc.address === value);
-    setDevAccount(selectedAccount);
+    const selectedAccount = devAccList?.find((acc: any) => acc.account.address === value);
+    setDevAccount(selectedAccount?.account);
   };
 
   if (isLoading) return <div>Loading DevAccount...</div>;
@@ -38,8 +39,9 @@ export const AccountCard = ({ env }: { env: string }) => {
             </SelectTrigger>
             <SelectContent>
               {devAccList?.map((acc: any, index: any) => (
-                <SelectItem value={acc.address} key={index}>
-                  {acc.address}
+                <SelectItem value={acc.account.address} key={index}>
+                  {shortenAddress(acc?.account.address)}
+                  {` (${acc?.balance} ETH)`}
                 </SelectItem>
               ))}
             </SelectContent>
