@@ -16,7 +16,7 @@ export default function SignIn() {
           <div className="absolute inset-0 bg-zinc-900" />
 
           <div className="relative z-20 flex items-center text-lg font-medium">
-            <Icons.logo className="mr-2 h-6 w-6" />
+            <img src="/icon.png" className="mr-2 h-6 w-6" />
             Nova
           </div>
           <div className="relative z-20 mt-20">

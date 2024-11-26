@@ -13,7 +13,7 @@ export const Header = () => {
           className="ring-offset-2 ring-offset-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none rounded-sm"
         >
           <div className="relative z-20 flex items-center text-lg font-medium">
-            <Icons.logo className="mr-2 h-6 w-6" />
+            <img src="/icon.png" className="mr-2 h-6 w-6" />
             Nova
           </div>
         </Link>
