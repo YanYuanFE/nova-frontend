@@ -25,8 +25,8 @@ async function produceDevAccount(): Promise<AccountInterface | undefined> {
   try {
     await mintDevToken(OZcontractAddress);
 
-    const balance = await getDevBanlance(OZcontractAddress);
-    console.log('mint token success', 'balance=', balance);
+    // const balance = await getDevBalance(OZcontractAddress);
+    // console.log('mint token success', 'balance=', balance);
 
     const OZaccount = new Account(provider, OZcontractAddress, privateKey);
 
@@ -37,16 +37,7 @@ async function produceDevAccount(): Promise<AccountInterface | undefined> {
     });
 
     await provider.waitForTransaction(transaction_hash);
-    console.log(
-      'address =',
-      contract_address,
-      'singner=',
-      OZaccount?.signer,
-      'cairoVersion',
-      OZaccount?.cairoVersion,
-      'balance=',
-      balance + ''
-    );
+    console.log('address =', contract_address, 'singner=', OZaccount?.signer, 'cairoVersion', OZaccount?.cairoVersion);
     // localStorage.setItem('devAccount', JSON.stringify(OZaccount));
 
     return OZaccount;
@@ -67,7 +58,7 @@ async function mintDevToken(address: string) {
       },
       body: JSON.stringify({
         address: address,
-        amount: 10_000_000_000_000_000_000,
+        amount: 100_000_000_000_000_000_000,
         unit: 'WEI'
       })
     });
@@ -79,7 +70,7 @@ async function mintDevToken(address: string) {
   }
 }
 
-async function getDevBanlance(address: string): Promise<string> {
+async function getDevBalance(address: string): Promise<string> {
   if (!address) return 'unknown';
 
   try {
@@ -87,7 +78,8 @@ async function getDevBanlance(address: string): Promise<string> {
       (response) => response.json()
     );
     console.log('余额', data?.amount);
-    return data?.amount;
+    const amountInEth = (parseFloat(data?.amount) / 1e18).toFixed(2);
+    return amountInEth;
   } catch (error) {
     console.error('get balance failed', error);
     return '';
@@ -95,13 +87,13 @@ async function getDevBanlance(address: string): Promise<string> {
 }
 
 const produceDevAccountList = async () => {
-  const accountList: AccountInterface[] = [];
+  const accountList: { account: AccountInterface; balance: string }[] = [];
   const promises = [];
 
   for (let i = 0; i < 10; i++) {
-    const accountPromise = produceDevAccount().then((account) => {
-      accountList.push(account!);
-      return mintDevToken(account!.address);
+    const accountPromise = produceDevAccount().then(async (account) => {
+      const balance = await getDevBalance(account!.address);
+      accountList.push({ account: account!, balance });
     });
     promises.push(accountPromise);
   }
@@ -110,4 +102,4 @@ const produceDevAccountList = async () => {
   return accountList;
 };
 
-export { produceDevAccount, getDevBanlance, produceDevAccountList };
+export { produceDevAccount, getDevBalance, produceDevAccountList };

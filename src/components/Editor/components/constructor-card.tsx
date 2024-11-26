@@ -16,6 +16,7 @@ export default function ConstructorCard({
 }) {
   const inputs = getConstructor(abi)?.inputs ?? [];
   const [inputValues, setinputValues] = useState<any>({});
+  console.log('deploy classhash:', classHash);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
