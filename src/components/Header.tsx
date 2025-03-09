@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Icons } from './icons';
 import { useAuth } from './AuthProvider';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
